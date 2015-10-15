@@ -10,4 +10,14 @@ public class DataFormatter {
 		}
 		return 0;
 	}
+	
+	public static long longTimeFromString(String timeString){
+		try{
+			return Long.parseLong(timeString);
+		}
+		catch(NumberFormatException e){
+			
+		}
+		return 0;
+	}
 }
