@@ -20,7 +20,6 @@ public class ScrapperTest {
        String url = "http://www.ebay.com/sch/Soda-/36/i.html?_ipg=200&rt=nc&LH_BIN=1";
         ArrayList<Item> Items = new ArrayList<Item>();
         Boolean auc = false;
-        String e2txt;
         long time = 0;
         Document doc = Jsoup.connect(url).get();
   /* TODO, foreach instead of forloop because select returns an arraylist of elements.*/
@@ -38,17 +37,14 @@ public class ScrapperTest {
         //System.out.println(i + " " + listingId);
         Elements elements = doc.select("span[timems]");
         if(elements.size() > 0){
-           elements.last().remove();
            Element e2 = doc.select("span[timems]").get(i);
        	   time = DataFormatter.longTimeFromString(e2.attr("timems"));
+       	   auc = true;
         }
         else{
         	time = 0;
         }
         //System.out.println(i + " " + time);
-        if(time != 0){
-        	auc = true;
-        }
         Items.add(new Item(listingId,title,price,time,auc));
         
         }
