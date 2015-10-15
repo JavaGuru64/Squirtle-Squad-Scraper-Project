@@ -8,21 +8,21 @@ package edu.mansfield.squirtle_squad.model;
 
 public class Item {
 
-	String id;
+	int id;
 	String title;
 	double price;
-	int bidTime;
+	long bidTime;
 	boolean isAuction;
 	
 	public Item(){
-		id = "";
+		id = 0;
 		title = "";
 		price = 0;
 		bidTime = 0;
 		isAuction = false;
 	}
 	
-	public Item(String id, String title, double price, int bidTime, boolean isAuction) {
+	public Item(int id, String title, double price, long bidTime, boolean isAuction) {
 		this.id = id;
 		this.title = "";
 		this.price = 0;
@@ -30,11 +30,11 @@ public class Item {
 		this.isAuction = false;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -54,11 +54,11 @@ public class Item {
 		this.price = price;
 	}
 
-	public int getBidTime() {
+	public long getBidTime() {
 		return bidTime;
 	}
 
-	public void setBidTime(int bidTime) {
+	public void setBidTime(long bidTime) {
 		this.bidTime = bidTime;
 	}
 
