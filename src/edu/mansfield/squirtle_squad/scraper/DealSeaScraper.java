@@ -1,9 +1,11 @@
 package edu.mansfield.squirtle_squad.scraper;
 
+import java.io.IOException;
+
 public class DealSeaScraper extends Scraper {
 	
-	public DealSeaScraper(String webpage) {
-		super(webpage);
+	public DealSeaScraper(String url) throws IOException {
+		super(url);
 	}
 	
 	/*
