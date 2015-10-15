@@ -13,7 +13,16 @@ public abstract class Scraper {
 	protected Document doc;
 	
 	public Scraper(String url) throws IOException {
-		doc = Jsoup.connect(url).get();
+		boolean bubbles = true;
+		while(bubbles){
+			try {
+				doc = Jsoup.connect(url).get();
+				bubbles = false;
+			}
+			catch(Exception e){
+				
+			}
+		}
 	}
 
 }

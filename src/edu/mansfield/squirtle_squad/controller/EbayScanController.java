@@ -20,7 +20,7 @@ import java.util.Hashtable;
 
 public class EbayScanController implements WebScanner {
 	
-	final int ITEMS_PER_PAGE = 200;
+	final int ITEMS_PER_PAGE = 10000;
 	
 	private ArrayList<String> categories;
 	private int scanLength; 
@@ -53,7 +53,7 @@ public class EbayScanController implements WebScanner {
 			url = categoryURL;
 			itemsDownloaded = 0;
 			minPrice = 0;
-			maxPrice = 100;
+			maxPrice = 10;
 			priceIncrement = maxPrice - minPrice;
 			
 			scraper = new EbayScraper(url);
@@ -61,41 +61,60 @@ public class EbayScanController implements WebScanner {
 			
 			items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
 			
+			System.out.println("Downloading: " + categoryURL);
+			
 			// Begin the scraping process for the current category
 			do{
 				String priceRange = "";
+				int maxPriceDividor = 0;
+				
+				scraper = new EbayScraper(url);
 				while(scraper.getItemCount() > 10000){
-					int maxPriceDividor = 0;
 					maxPriceDividor++;
-					maxPrice = (minPrice + (priceIncrement)/maxPriceDividor);
-					priceRange = "?_png=1&rt=nc&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice;
-					String testString = url + priceRange;
+					
+					
+					maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
+					if(maxPrice <= minPrice){
+						maxPrice = minPrice + 10;
+						break;
+					}
+					
+					priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
+					System.out.println("Price Range:" + minPrice + "-" + maxPrice);
+					String testString = url + "?_png=1" + priceRange;
+					System.out.println("New URL: " + testString);
 					scraper = new EbayScraper(testString);
+					System.out.println("Adjusting Price: " + scraper.getItemCount() + " Items found");
 				}
-				priceIncrement = 2*(maxPrice - minPrice);
+				priceIncrement = Math.abs(2*(maxPrice - minPrice));
 				minPrice = maxPrice;
 				
-
+				System.out.println("Num Items In Price Range: " + scraper.getItemCount());
 				
-				for(int i = 0; i < scraper.getItemCount()/ITEMS_PER_PAGE; i++){
-					
-					itemPage = "?_png=1&_pgn=" + (i+1) + "&_skc=" + i*ITEMS_PER_PAGE + "&rt=nc";
-					scraper = new EbayScraper(url + itemPage + priceRange);
-					
+//				for(int i = 0; i < scraper.getItemCount()/ITEMS_PER_PAGE; i++){
+//					
+//					itemPage = "?_png=1&_pgn=" + (i+1) + "&_skc=" + i*ITEMS_PER_PAGE;
+//					scraper = new EbayScraper(url + itemPage + priceRange);
+					scraper = new EbayScraper(url + "?_png=1" + priceRange);
 					for(Item item: scraper.getItemsListed()){
-						itemsDownloaded++;
+						
 						 if(!items.containsKey(item.getId())){
 							 items.put(item.getId(), item);
 						 }
 					}
-				}
+					itemsDownloaded += scraper.getItemCount();
+					System.out.println("Downloaded: " + url + priceRange);
+					System.out.println("Items Downloaded: " + itemsDownloaded);
+//				}
 				
 			// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
 			}while(itemsDownloaded < numberOfItemsInCategory);
 			
+			System.out.println("Category " + categoryURL + " is done.");
 			// -TODO increment scan percent and update time for scan
 		}
 		}catch(IOException e){
+			e.printStackTrace();
 			// -TODO Fail nice
 		}
 	}
@@ -115,5 +134,10 @@ public class EbayScanController implements WebScanner {
 			return false;
 		}
 		return true;
+	}
+	
+	public static void main(String[] args){
+		EbayScanController ebay = new EbayScanController();
+		ebay.scan();
 	}
 }
