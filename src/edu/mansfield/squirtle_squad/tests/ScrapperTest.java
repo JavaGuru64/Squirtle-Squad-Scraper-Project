@@ -23,7 +23,7 @@ public class ScrapperTest {
        String url = "http://www.ebay.com/sch/Soda-/36/i.html?&_ipg=200&rt=nc";
 >>>>>>> Stashed changes
         ArrayList<Item> Items = new ArrayList<Item>();
-        Boolean auc = false;
+      s  Boolean auc = false;
         long time = 0;
         Document doc = Jsoup.connect(url).get();
   /* TODO, foreach instead of forloop because select returns an arraylist of elements.*/

@@ -40,7 +40,7 @@ public class EbayScanController implements WebScanner {
 		
 		String url;
 		EbayScraper scraper;
-		String itemPage;
+//		String itemPage;
 		int numberOfItemsInCategory;
 		int itemsDownloaded;
 		int minPrice;
