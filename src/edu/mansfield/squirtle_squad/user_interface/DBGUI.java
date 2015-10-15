@@ -80,18 +80,19 @@ public class DBGUI {
 		scrollPane.setBounds(375, 38, 200, 20);
 		frmDataviewgui.getContentPane().add(scrollPane);
 		
-		JList list = new JList();
+		JList<String> list = new JList<String>();
 		scrollPane.setViewportView(list);
-		list.setModel(new AbstractListModel() {
+		list.setModel(new AbstractListModel<String>() {
 			String[] values = new String[] {"Lowest Price", "Highest Price", "Item Name", "Item ID", "Bid/Auction", "Site of Origin"};
 			public int getSize() {
 				return values.length;
 			}
-			public Object getElementAt(int index) {
+			public String getElementAt(int index) {
 				return values[index];
 			}
 		});
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		list.setSelectedIndex(0);
 		
 		JButton btnSearch = new JButton("Search");
 		btnSearch.setBounds(485, 80, 89, 23);

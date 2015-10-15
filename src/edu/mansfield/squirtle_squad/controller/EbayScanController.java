@@ -83,8 +83,8 @@ public class EbayScanController implements WebScanner {
 					
 					for(Item item: scraper.getItemsListed()){
 						itemsDownloaded++;
-						 if(!items.containsKey(item.getID())){
-							 items.put(item.getID(), item);
+						 if(!items.containsKey(item.getId())){
+							 items.put(item.getId(), item);
 						 }
 					}
 				}

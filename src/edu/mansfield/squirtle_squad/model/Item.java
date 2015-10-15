@@ -9,13 +9,70 @@ package edu.mansfield.squirtle_squad.model;
 public class Item {
 
 	String id;
+	String title;
+	double price;
+	int bidTime;
+	boolean isAuction;
 	
-	public Item() {
-		// TODO Auto-generated constructor stub
+	public Item(){
+		id = "";
+		title = "";
+		price = 0;
+		bidTime = 0;
+		isAuction = false;
 	}
 	
-	public String getID(){
+	public Item(String id, String title, double price, int bidTime, boolean isAuction) {
+		this.id = id;
+		this.title = "";
+		this.price = 0;
+		this.bidTime = 0;
+		this.isAuction = false;
+	}
+
+	public String getId() {
 		return id;
 	}
 
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public int getBidTime() {
+		return bidTime;
+	}
+
+	public void setBidTime(int bidTime) {
+		this.bidTime = bidTime;
+	}
+
+	public boolean isAuction() {
+		return isAuction;
+	}
+
+	public void setAuction(boolean isAuction) {
+		this.isAuction = isAuction;
+	}
+
+	@Override
+	public String toString() {
+		return "Item [id=" + id + ", title=" + title + ", price=" + price
+				+ ", bidTime=" + bidTime + ", isAuction=" + isAuction + "]";
+	}
 }
