@@ -1,14 +1,19 @@
 package edu.mansfield.squirtle_squad.scraper;
 
+import java.io.IOException;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
 
 // Thought abstraction was appropriate, may be overkill.
 public abstract class Scraper {
 
 	// I think this is correct
-	protected String webpage;
+	protected Document doc;
 	
-	public Scraper(String webpage) {
-		this.webpage = webpage;
+	public Scraper(String url) throws IOException {
+		doc = Jsoup.connect(url).get();
 	}
 
 }

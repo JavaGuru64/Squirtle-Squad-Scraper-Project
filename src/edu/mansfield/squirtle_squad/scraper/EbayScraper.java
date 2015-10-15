@@ -1,5 +1,6 @@
 package edu.mansfield.squirtle_squad.scraper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import edu.mansfield.squirtle_squad.model.Item;
@@ -17,10 +18,10 @@ import edu.mansfield.squirtle_squad.model.Item;
 
 public class EbayScraper extends Scraper{
 	
-	// String webpage is a variable of Scraper
+	// JSoup Document doc is a variable of Scraper
 	
-	public EbayScraper(String webpage){
-		super(webpage);
+	public EbayScraper(String url) throws IOException{
+		super(url);
 	}
 	
 	public int getItemCount(){
@@ -32,7 +33,6 @@ public class EbayScraper extends Scraper{
 		 *  narrow the search.
 		 *  
 		 */
-		webpage = "Blah";
 		return 0;
 	}
 	
