@@ -28,7 +28,7 @@ public class EbayScanController implements WebScanner {
 	private int percentIncrementPerCategory;
 	private int timeSinceLastPercentIncrease;
 	private int timeRemainingEstimate;
-	private Hashtable<String, Item> items;
+	private Hashtable<Long, Item> items;
 	
 	
 	public EbayScanController() {
@@ -47,6 +47,7 @@ public class EbayScanController implements WebScanner {
 		int maxPrice;
 		int priceIncrement;
 		
+		try{
 		// Step through the catagories and scrape ALL THE DATUM!!!
 		for(String categoryURL: categories){
 			url = categoryURL;
@@ -58,7 +59,7 @@ public class EbayScanController implements WebScanner {
 			scraper = new EbayScraper(url);
 			numberOfItemsInCategory = scraper.getItemCount();
 			
-			items = new Hashtable<String, Item>(2*numberOfItemsInCategory);
+			items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
 			
 			// Begin the scraping process for the current category
 			do{
@@ -93,6 +94,9 @@ public class EbayScanController implements WebScanner {
 			}while(itemsDownloaded < numberOfItemsInCategory);
 			
 			// -TODO increment scan percent and update time for scan
+		}
+		}catch(IOException e){
+			// -TODO Fail nice
 		}
 	}
 
