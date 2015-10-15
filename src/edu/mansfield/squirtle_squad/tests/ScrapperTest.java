@@ -5,8 +5,9 @@ import org.jsoup.helper.Validate;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
- 
 
+import edu.mansfield.squirtle_squad.model.Item;
+import edu.mansfield.squirtle_squad.utilities.DataFormatter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,8 +18,9 @@ import java.util.ArrayList;
 public class ScrapperTest {
     public static void main(String[] args) throws IOException {
        String url = "http://www.ebay.com/sch/Soda-/36/i.html?LH_Auction=1&_ipg=200&rt=nc";
-        ArrayList<String> cat = new ArrayList<String>();
- 
+        ArrayList<Item> Items = new ArrayList<Item>();
+        Boolean auc = false;
+        long time = 0;
         Document doc = Jsoup.connect(url).get();
   /* TODO, foreach instead of forloop because select returns an arraylist of elements.*/
     
@@ -26,31 +28,25 @@ public class ScrapperTest {
 
        for(int i=0;i<=199;i++)
         {
-    	String price = "" + doc.select("li.lvprice").get(i).text();
-    	
-    	System.out.println(i + " " + price);
-        }
-        
-        for(int i=0;i<=199;i++)
-        {
+    	double price = DataFormatter.doubleFromPriceString("" + doc.select("li.lvprice").get(i).text());
+    	//System.out.println(i + " " + price);
         String title = "" + doc.select("a.vip").get(i).text();
         System.out.println(i + " " + title);
-        }
-        
-        for(int i=0;i<=199;i++)
-        {
         Element e = doc.select("li[listingid]").get(i);  
-        String listingId = e.attr("listingid");
-        System.out.println(i + " " + listingId);
+        long listingId = Long.parseLong(e.attr("listingid"));
+        //System.out.println(i + " " + listingId);
+        Element e2 = doc.select("span[timems]").get(i);  
+        time = Long.parseLong(e2.attr("timems"));
+        //System.out.println(i + " " + time);
+        if(time != 0){
+        	auc = true;
         }
-        for(int i=0;i<=199;i++)
-        {
-        Element e = doc.select("span[timems]").get(i);  
-        long time = (Long.parseLong(e.attr("timems"))/1000);
-        System.out.println(i + " " + time);
-        }
-     
+        Items.add(new Item(listingId,title,price,time,auc));
         
+        }
+       for(Item it: Items){
+      // System.out.println(it.toString());
+       }
         /*     
         for(Element e: doc.select("a.ch[href]"))
         {
