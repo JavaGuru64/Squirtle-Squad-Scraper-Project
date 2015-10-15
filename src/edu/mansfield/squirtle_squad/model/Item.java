@@ -24,10 +24,10 @@ public class Item {
 	
 	public Item(long id, String title, double price, long bidTime, boolean isAuction) {
 		this.id = id;
-		this.title = "";
-		this.price = 0;
-		this.bidTime = 0;
-		this.isAuction = false;
+		this.title = title;
+		this.price = price;
+		this.bidTime = bidTime;
+		this.isAuction = isAuction;
 	}
 
 	public long getId() {
