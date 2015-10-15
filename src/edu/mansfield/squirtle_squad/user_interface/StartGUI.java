@@ -58,7 +58,7 @@ public class StartGUI {
 	private void initialize() {
 		frmScraperBot = new JFrame();
 		frmScraperBot.setTitle("Scraper Bot");
-		frmScraperBot.setBounds(100, 100, 407, 328);
+		frmScraperBot.setBounds(100, 100, 340, 242);
 		frmScraperBot.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScraperBot.getContentPane().setLayout(null);
 		
@@ -69,7 +69,7 @@ public class StartGUI {
 				sg.main(null);
 			}
 		});
-		btnSubmit.setBounds(104, 235, 65, 23);
+		btnSubmit.setBounds(21, 120, 65, 23);
 		frmScraperBot.getContentPane().add(btnSubmit);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -78,7 +78,7 @@ public class StartGUI {
 				System.exit(0);
 			}
 		});
-		btnCancel.setBounds(292, 235, 89, 23);
+		btnCancel.setBounds(209, 120, 89, 23);
 		frmScraperBot.getContentPane().add(btnCancel);
 		
 		JLabel lblWelcomeToThe = new JLabel("Welcome to the site scraper bot, for all your scraping needs!");
@@ -92,43 +92,16 @@ public class StartGUI {
 				hg.main(null);
 			}
 		});
-		btnHelp.setBounds(292, 36, 89, 23);
+		btnHelp.setBounds(21, 36, 89, 23);
 		frmScraperBot.getContentPane().add(btnHelp);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Scrape Ebay");
-		buttonGroup.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setBounds(10, 56, 109, 23);
-		frmScraperBot.getContentPane().add(rdbtnNewRadioButton);
-		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Scrape Both");
-		buttonGroup.add(rdbtnNewRadioButton_2);
-		rdbtnNewRadioButton_2.setBounds(10, 108, 109, 23);
-		frmScraperBot.getContentPane().add(rdbtnNewRadioButton_2);
-		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Scrape DealSea");
-		buttonGroup.add(rdbtnNewRadioButton_1);
-		rdbtnNewRadioButton_1.setBounds(10, 82, 133, 23);
-		frmScraperBot.getContentPane().add(rdbtnNewRadioButton_1);
-		
 		JLabel lblTimeSinceLast = new JLabel("Time since last scan: ");
-		lblTimeSinceLast.setBounds(10, 153, 133, 14);
+		lblTimeSinceLast.setBounds(10, 81, 133, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
 		
 		JLabel lblTimetag = new JLabel("TimeTag");
-		lblTimetag.setBounds(144, 153, 65, 14);
+		lblTimetag.setBounds(144, 81, 65, 14);
 		frmScraperBot.getContentPane().add(lblTimetag);
-		
-		JSlider slider = new JSlider();
-		slider.setBounds(181, 82, 200, 23);
-		frmScraperBot.getContentPane().add(slider);
-		
-		JLabel lblPercentageOfSite = new JLabel("Percentage of site to scrape: ");
-		lblPercentageOfSite.setBounds(144, 117, 172, 14);
-		frmScraperBot.getContentPane().add(lblPercentageOfSite);
-		
-		JLabel label = new JLabel("%%%");
-		label.setBounds(335, 117, 46, 14);
-		frmScraperBot.getContentPane().add(label);
 		
 		JButton btnViewdb = new JButton("ViewDB");
 		btnViewdb.addActionListener(new ActionListener() {
@@ -137,7 +110,7 @@ public class StartGUI {
 				dg.main(null);
 			}
 		});
-		btnViewdb.setBounds(188, 235, 89, 23);
+		btnViewdb.setBounds(105, 120, 89, 23);
 		frmScraperBot.getContentPane().add(btnViewdb);
 		
 		JMenuBar menuBar = new JMenuBar();
