@@ -17,9 +17,10 @@ import java.util.ArrayList;
  */
 public class ScrapperTest {
     public static void main(String[] args) throws IOException {
-       String url = "http://www.ebay.com/sch/Soda-/36/i.html?LH_Auction=1&_ipg=200&rt=nc";
+       String url = "http://www.ebay.com/sch/Soda-/36/i.html?_ipg=200&rt=nc&LH_BIN=1";
         ArrayList<Item> Items = new ArrayList<Item>();
         Boolean auc = false;
+        String e2txt;
         long time = 0;
         Document doc = Jsoup.connect(url).get();
   /* TODO, foreach instead of forloop because select returns an arraylist of elements.*/
@@ -31,12 +32,19 @@ public class ScrapperTest {
     	double price = DataFormatter.doubleFromPriceString("" + doc.select("li.lvprice").get(i).text());
     	//System.out.println(i + " " + price);
         String title = "" + doc.select("a.vip").get(i).text();
-        System.out.println(i + " " + title);
+        //System.out.println(i + " " + title);
         Element e = doc.select("li[listingid]").get(i);  
         long listingId = Long.parseLong(e.attr("listingid"));
         //System.out.println(i + " " + listingId);
-        Element e2 = doc.select("span[timems]").get(i);  
-        time = Long.parseLong(e2.attr("timems"));
+        Elements elements = doc.select("span[timems]");
+        if(elements.size() > 0){
+           elements.last().remove();
+           Element e2 = doc.select("span[timems]").get(i);
+       	   time = DataFormatter.longTimeFromString(e2.attr("timems"));
+        }
+        else{
+        	time = 0;
+        }
         //System.out.println(i + " " + time);
         if(time != 0){
         	auc = true;
@@ -45,7 +53,7 @@ public class ScrapperTest {
         
         }
        for(Item it: Items){
-      // System.out.println(it.toString());
+         System.out.println(it.toString());
        }
         /*     
         for(Element e: doc.select("a.ch[href]"))
