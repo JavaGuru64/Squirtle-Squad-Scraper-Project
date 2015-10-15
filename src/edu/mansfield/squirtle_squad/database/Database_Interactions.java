@@ -78,6 +78,7 @@ public class Database_Interactions {
 		if (ct.next()) {
 			results = ct.getInt(1);
 		}
+		
 		itemSet = new Item[results];
 		sql = "SELECT * FROM EbayData;";
 
