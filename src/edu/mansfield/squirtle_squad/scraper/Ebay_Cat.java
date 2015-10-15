@@ -13,11 +13,26 @@ public class Ebay_Cat {
 		ArrayList<String> cat = new ArrayList<String>();
 		for (Element e : doc.select("a.ch[href]")) {
 			String url1 = e.attr("href");
+			if(!url1.endsWith("/i.html")){
+				url1 = url1 + "/i.html";
+			}
+			
 			cat.add(url1);
 
 		}
 		return cat;
 
+	}
+	
+	public static void main(String[] args){
+		try {
+			for(String s: Ebay_Cat.getAllCategories()){
+				System.out.println(s);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

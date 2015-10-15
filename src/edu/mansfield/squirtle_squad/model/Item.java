@@ -8,8 +8,14 @@ package edu.mansfield.squirtle_squad.model;
 
 public class Item {
 
+	String id;
+	
 	public Item() {
 		// TODO Auto-generated constructor stub
+	}
+	
+	public String getID(){
+		return id;
 	}
 
 }
