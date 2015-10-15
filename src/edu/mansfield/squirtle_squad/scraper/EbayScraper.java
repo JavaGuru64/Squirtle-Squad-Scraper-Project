@@ -14,7 +14,6 @@ import edu.mansfield.squirtle_squad.model.Item;
  * add it later. Remember to keep things generic.
  *
  */
-<<<<<<< HEAD
 
 public class EbayScraper extends Scraper{
 	
@@ -50,54 +49,3 @@ public class EbayScraper extends Scraper{
 		return itemsOnPage;
 	}
 }
-=======
-public class EbayScraper {
-    public static void main(String[] args) throws IOException {
-       String url = "http://www.ebay.com/sch/Soda-/36/i.html?LH_Auction=1&_ipg=200&rt=nc";
-        ArrayList<String> cat = new ArrayList<String>();
- 
-        Document doc = Jsoup.connect(url).get();
-  /* TODO, foreach instead of forloop because select returns an arraylist of elements.
-    
-    
-   */
-        /*
-       for(int i=0;i<=199;i++)
-        {
-    	String price = "" + doc.select("li.lvprice").get(i).text();
-    	
-    	System.out.println(i + " " + price);
-        }
-        
-        for(int i=0;i<=199;i++)
-        {
-        String title = "" + doc.select("a.vip").get(i).text();
-        System.out.println(i + " " + title);
-        }
-        
-        for(int i=0;i<=199;i++)
-        {
-        Element e = doc.select("li[listingid]").get(i);  
-        String listingId = e.attr("listingid");
-        System.out.println(i + " " + listingId);
-        }
-        */
-        for(int i=0;i<=199;i++)
-        {
-        Element e = doc.select("span[timems]").get(i);  
-        long time = (Long.parseLong(e.attr("timems"))/1000);
-        System.out.println(i + " " + time);
-        }
-     
-        
-        /*     
-        for(Element e: doc.select("a.ch[href]"))
-        {
-        //Element e = doc.select("a.ch[href]").get(0);
-        String url1 = e.attr("href");
-        cat.add(url1);
-        }
-        */
-    }
-}
->>>>>>> origin/master
