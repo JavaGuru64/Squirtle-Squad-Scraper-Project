@@ -24,7 +24,7 @@ public class EbayScraper {
     
     
    */
-       /* for(int i=0;i<=199;i++)
+       for(int i=0;i<=199;i++)
         {
     	String price = "" + doc.select("li.lvprice").get(i).text();
     	
@@ -43,16 +43,15 @@ public class EbayScraper {
         String listingId = e.attr("listingid");
         System.out.println(i + " " + listingId);
         }
-        */
+     
         
-        
+        /*     
         for(Element e: doc.select("a.ch[href]"))
         {
         //Element e = doc.select("a.ch[href]").get(0);
         String url1 = e.attr("href");
         cat.add(url1);
-        
         }
- 
+        */
     }
 }
