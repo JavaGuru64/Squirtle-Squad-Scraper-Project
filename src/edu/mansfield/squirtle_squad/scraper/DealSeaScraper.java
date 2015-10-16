@@ -2,10 +2,12 @@ package edu.mansfield.squirtle_squad.scraper;
 
 import java.io.IOException;
 
+import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
+
 public class DealSeaScraper extends Scraper {
 	
-	public DealSeaScraper(String url) throws IOException {
-		super(url);
+	public DealSeaScraper(WebScannerDelegate delegate, String url) throws IOException {
+		super(delegate, url);
 	}
 	
 	/*

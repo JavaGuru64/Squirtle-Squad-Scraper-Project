@@ -28,7 +28,7 @@ public class Database_Interactions {
 
 	public void makeTable(Connection conn) throws SQLException {
 		Statement stmt = null;
-		String sql = "CREATE TABLE EbayData\n" + "(id long NOT NULL,"
+		String sql = "CREATE TABLE EbayData\n" + "(id long NOT NULL PRIMARY KEY,"
 				+ "title varchar(255) NOT NULL,"
 				+ "price DOUBLE PRECISION NOT NULL," + "bidTime long NOT NULL,"
 				+ "isAuction boolean);";

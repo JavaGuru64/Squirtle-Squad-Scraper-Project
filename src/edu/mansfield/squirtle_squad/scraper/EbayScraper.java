@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 import edu.mansfield.squirtle_squad.model.Item;
 import edu.mansfield.squirtle_squad.utilities.DataFormatter;
 
@@ -22,10 +23,11 @@ import edu.mansfield.squirtle_squad.utilities.DataFormatter;
 
 public class EbayScraper extends Scraper{
 	
-	// JSoup Document doc is a variable of Scraper
+	// Document doc; -JSoup Document loaded with url.
+	// WebScannerDelegate delegate; -A delegate to talk with the webscanner.
 	
-	public EbayScraper(String url) throws IOException{
-		super(url);
+	public EbayScraper(WebScannerDelegate delegate, String url) throws IOException{
+		super(delegate, url);
 	}
 	
 	public int getItemCount(){
@@ -76,7 +78,7 @@ public class EbayScraper extends Scraper{
 	}
 	
 	public static void main(String[] args) throws IOException{
-		EbayScraper scraper = new EbayScraper("http://www.ebay.com/sch/Antiquities-/37903/i.html?_mPrRngCbx=1&_udlo=0&_udhi=16&_pgn=11&_skc=2000&rt=nc");
+		EbayScraper scraper = new EbayScraper(null, "http://www.ebay.com/sch/Antiquities-/37903/i.html?_mPrRngCbx=1&_udlo=0&_udhi=16&_pgn=11&_skc=2000&rt=nc");
 		int i=0;
 		for(Item item: scraper.getItemsListed()){
 			System.out.println(++i);

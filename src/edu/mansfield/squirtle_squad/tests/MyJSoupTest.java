@@ -1,19 +1,19 @@
 package edu.mansfield.squirtle_squad.tests;
 
 import java.io.IOException;
-import java.util.ArrayList;
+//import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
-import edu.mansfield.squirtle_squad.model.Item;
+//import org.jsoup.nodes.Element;
+//import org.jsoup.select.Elements;
+//
+//import edu.mansfield.squirtle_squad.model.Item;
 
 public class MyJSoupTest {
 	public static void main(String[] args) throws IOException {
 		String url = "http://www.ebay.com/sch/Soda-/36/i.html?&_ipg=200&rt=nc";
-		ArrayList<Item> Items = new ArrayList<Item>();
+		//ArrayList<Item> Items = new ArrayList<Item>();
 
 		Document doc = Jsoup.connect(url).get();
 		  /* TODO, foreach instead of forloop because select returns an arraylist of elements.*/

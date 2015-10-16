@@ -2,26 +2,17 @@ package edu.mansfield.squirtle_squad.user_interface;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
-
-import java.awt.GridBagLayout;
-
 import javax.swing.JButton;
-
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
 import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
-import javax.swing.JRadioButton;
+import javax.swing.JMenuItem;
+//import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
-import javax.swing.JMenuItem;
-import javax.swing.JSlider;
 
 
 public class StartGUI {
@@ -65,8 +56,7 @@ public class StartGUI {
 		JButton btnSubmit = new JButton("Scan");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ScanningGUI sg = new ScanningGUI();
-				sg.main(null);
+				ScanningGUI.main(null);
 			}
 		});
 		btnSubmit.setBounds(21, 120, 65, 23);
@@ -88,8 +78,7 @@ public class StartGUI {
 		JButton btnHelp = new JButton("Help");
 		btnHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				HelpGUI hg = new HelpGUI();
-				hg.main(null);
+				HelpGUI.main(null);
 			}
 		});
 		btnHelp.setBounds(21, 36, 89, 23);
@@ -106,8 +95,7 @@ public class StartGUI {
 		JButton btnViewdb = new JButton("ViewDB");
 		btnViewdb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				DBGUI dg = new DBGUI();
-				dg.main(null);
+				DBGUI.main(null);
 			}
 		});
 		btnViewdb.setBounds(105, 120, 89, 23);

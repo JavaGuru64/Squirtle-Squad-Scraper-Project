@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
+@Deprecated
 public class HTTPConnection {
 
 	/*
@@ -13,6 +14,7 @@ public class HTTPConnection {
 	 *  our networking later, but for now all we need is a static method. 
 	 *
 	 */
+	@Deprecated
 	HTTPConnection(){
 		
 	}
@@ -23,6 +25,7 @@ public class HTTPConnection {
 	 *  want to handle an exception differently.
 	 *  
 	 */
+	@Deprecated
 	public static String htmlFromUrl(String url) throws IOException {
 		
 		URLConnection htmlStream = new URL(url).openConnection();
@@ -39,6 +42,7 @@ public class HTTPConnection {
 		return webpage.toString();
 	}
 	
+	@Deprecated
 	public static String htmlWithNewlinesFromUrl(String url) throws IOException {
 		
 		URLConnection htmlStream = new URL(url).openConnection();

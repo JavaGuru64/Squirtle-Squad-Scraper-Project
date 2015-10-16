@@ -5,13 +5,13 @@ import javax.swing.JFrame;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JSpinner;
 import javax.swing.JList;
 import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -47,6 +47,7 @@ public class DBGUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
+	@SuppressWarnings("serial")
 	private void initialize() {
 		frmDataviewgui = new JFrame();
 		frmDataviewgui.setTitle("DataViewGUI");

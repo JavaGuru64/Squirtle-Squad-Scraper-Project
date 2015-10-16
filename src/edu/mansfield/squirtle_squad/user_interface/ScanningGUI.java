@@ -54,7 +54,7 @@ public class ScanningGUI {
 		slider.setValue(0);
 		slider.setBounds(10, 36, 200, 23);
 		slider.setFocusable(false);
-		slider.disable();
+		slider.setEnabled(false);
 		frmScanInProgress.getContentPane().add(slider);
 		
 		JLabel label = new JLabel("%%%");

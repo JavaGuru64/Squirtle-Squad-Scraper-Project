@@ -7,6 +7,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 public class Ebay_Cat {
+	
+	// -TODO add a timeout to this thing so we don't fail over a dropped packet
 	public static ArrayList<String> getAllCategories() throws IOException {
 		Document doc = Jsoup.connect(
 				"http://www.ebay.com/sch/allcategories/all-categories").get();
