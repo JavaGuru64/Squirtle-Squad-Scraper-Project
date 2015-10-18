@@ -1,5 +1,6 @@
 package edu.mansfield.squirtle_squad.controller;
 
+import edu.mansfield.squirtle_squad.delegates.ScanDelegate;
 import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 import edu.mansfield.squirtle_squad.model.Item;
 import edu.mansfield.squirtle_squad.scraper.EbayScraper;
@@ -29,7 +30,12 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	private int scanPercent;
 	private int percentIncrementPerCategory;
 	private Hashtable<Long, Item> items;
+	private ScanDelegate delegate; 
 	
+	public EbayScanController(ScanDelegate delegate) {
+		this.delegate = delegate;
+		initializeScan();
+	}
 	
 	public EbayScanController() {
 		initializeScan();

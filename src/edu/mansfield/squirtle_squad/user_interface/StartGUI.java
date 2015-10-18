@@ -10,12 +10,14 @@ import javax.swing.JMenuItem;
 //import javax.swing.JRadioButton;
 import javax.swing.ButtonGroup;
 
+import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
 
-public class StartGUI {
+public class StartGUI implements StartGUIDelegate{
 
 	private JFrame frmScraperBot;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -115,5 +117,11 @@ public class StartGUI {
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
+	}
+
+	@Override
+	public boolean setLastScanTime(ScanningGUI source, String time) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

@@ -5,14 +5,20 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.JButton;
+
+import edu.mansfield.squirtle_squad.controller.EbayScanController;
+import edu.mansfield.squirtle_squad.delegates.ScanDelegate;
+import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
+import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 
-public class ScanningGUI {
+public class ScanningGUI implements ScanDelegate{
 
 	private JFrame frmScanInProgress;
-
+	private StartGUIDelegate delegate;
 	/**
 	 * Launch the application.
 	 */
@@ -34,6 +40,15 @@ public class ScanningGUI {
 	 */
 	public ScanningGUI() {
 		initialize();
+		EbayScanController scanController = new EbayScanController(this);
+		scanController.scan();
+	}
+	
+	public ScanningGUI(StartGUIDelegate delegate) {
+		this.delegate = delegate;
+		initialize();
+		EbayScanController scanController = new EbayScanController(this);
+		scanController.scan();
 	}
 
 	/**
@@ -73,6 +88,30 @@ public class ScanningGUI {
 		JButton btnNewButton = new JButton("Ok");
 		btnNewButton.setBounds(285, 49, 89, 23);
 		frmScanInProgress.getContentPane().add(btnNewButton);
+	}
+
+	@Override
+	public boolean incrementScanPercentage(WebScannerDelegate source, int amountToIncrement) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean setScanPercentage(WebScannerDelegate source, int percentage) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean setTimeUntilFinished(WebScannerDelegate source, int timeInSeconds) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean setStatusText(WebScannerDelegate source, String text) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
