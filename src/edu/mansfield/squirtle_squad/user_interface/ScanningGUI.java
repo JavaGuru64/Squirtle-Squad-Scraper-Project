@@ -102,6 +102,8 @@ public class ScanningGUI implements ScanDelegate{
 		return false;
 	}
 
+	// Don't worry about this one. I don't really have a way to implement 
+	// a time estimator in my scanner yet and it is way low on my priority list
 	@Override
 	public boolean setTimeUntilFinished(WebScannerDelegate source, int timeInSeconds) {
 		// TODO Auto-generated method stub

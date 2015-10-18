@@ -9,7 +9,10 @@ import edu.mansfield.squirtle_squad.scraper.Scraper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.Hashtable;
+
+import javax.swing.JOptionPane;
 
 
 /* 
@@ -54,71 +57,78 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		int priceIncrement;
 		
 		try{
-		// Step through the catagories and scrape ALL THE DATUM!!!
-		for(String categoryURL: categories){
-			url = categoryURL;
-			itemsDownloaded = 0;
-			minPrice = 0;
-			maxPrice = 10;
-			priceIncrement = maxPrice - minPrice;
+			// Step through the catagories and scrape ALL THE DATUM!!!
 			
-			scraper = new EbayScraper(this, url);
-			numberOfItemsInCategory = scraper.getItemCount();
-			
-			items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
-			
-			System.out.println("Downloading: " + categoryURL);
-			
-			// Begin the scraping process for the current category
-			do{
-				String priceRange = "";
-				int maxPriceDividor = 0;
+			int currentCategory = 0;
+			for(String categoryURL: categories){
+				url = categoryURL;
+				itemsDownloaded = 0;
+				minPrice = 0;
+				maxPrice = 10;
+				priceIncrement = maxPrice - minPrice;
 				
 				scraper = new EbayScraper(this, url);
-				while(scraper.getItemCount() > 10000){
-					maxPriceDividor++;
-					
-					
-					maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
-					if(maxPrice <= minPrice){
-						maxPrice = minPrice + 10;
-						break;
-					}
-					
-					priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
-					System.out.println("New Price Range:" + minPrice + "-" + maxPrice);
-					String testString = url + "?_png=1" + priceRange;
-					//System.out.println("New URL: " + testString);
-					scraper = new EbayScraper(this, testString);
-					System.out.println("Adjusting Price: " + scraper.getItemCount() + " Items found");
-				}
-				priceIncrement = Math.abs(2*(maxPrice - minPrice));
-				minPrice = maxPrice;
+				numberOfItemsInCategory = scraper.getItemCount();
 				
-				System.out.println("Num Items In Price Range: " + scraper.getItemCount());
+				items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
+				delegate.setStatusText(this, "Downloading: " + categoryURL);
+				System.out.println("Downloading: " + categoryURL);
 				
-//				for(int i = 0; i < scraper.getItemCount()/ITEMS_PER_PAGE; i++){
-//					
-//					itemPage = "?_png=1&_pgn=" + (i+1) + "&_skc=" + i*ITEMS_PER_PAGE;
-//					scraper = new EbayScraper(url + itemPage + priceRange);
-					scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
-					for(Item item: scraper.getItemsListed()){
+				// Begin the scraping process for the current category
+				do{
+					String priceRange = "";
+					int maxPriceDividor = 0;
+					
+					scraper = new EbayScraper(this, url);
+					while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000){
+						maxPriceDividor++;
 						
-						 if(!items.containsKey(item.getId())){
-							 items.put(item.getId(), item);
-						 }
+						maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
+						if(maxPrice <= minPrice){
+							maxPrice = minPrice + 10;
+							delegate.setStatusText(this, "Something Wierd Happened!");
+							break;
+						}
+						
+						priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
+						
+						
+						
+						String testString = url + "?_png=1" + priceRange;
+						scraper = new EbayScraper(this, testString);
+						delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
+								+ " | " + scraper.getItemCount() + " Items in range");
 					}
-					itemsDownloaded += scraper.getItemCount();
-					System.out.println("Downloaded: " + url + priceRange);
-					System.out.println("Items Downloaded: " + itemsDownloaded);
-//				}
+					priceIncrement = Math.abs(2*(maxPrice - minPrice));
+					minPrice = maxPrice;
+					
+					System.out.println("Num Items In Price Range: " + scraper.getItemCount());
+					
+	//				for(int i = 0; i < scraper.getItemCount()/ITEMS_PER_PAGE; i++){
+	//					
+	//					itemPage = "?_png=1&_pgn=" + (i+1) + "&_skc=" + i*ITEMS_PER_PAGE;
+	//					scraper = new EbayScraper(url + itemPage + priceRange);
+						scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
+						delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
+						for(Item item: scraper.getItemsListed()){
+							
+							 if(!items.containsKey(item.getId())){
+								 items.put(item.getId(), item);
+							 }
+						}
+						itemsDownloaded += scraper.getItemCount();
+						//System.out.println("Downloaded: " + url + priceRange);
+						//System.out.println("Items Downloaded: " + itemsDownloaded);
+	//				}
+					
+				// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
+				}while(itemsDownloaded < numberOfItemsInCategory);
 				
-			// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
-			}while(itemsDownloaded < numberOfItemsInCategory);
-			
-			System.out.println("Category " + categoryURL + " is done.");
-			// -TODO increment scan percent and update time for scan
-		}
+				delegate.incrementScanPercentage(this, scanLength / currentCategory++);
+				System.out.println("Category " + categoryURL + " is done.");
+				// -TODO increment scan percent and update time for scan
+			}
+			pushItemsToDataBase();
 		}catch(IOException e){
 			e.printStackTrace();
 			// -TODO Fail nice
@@ -133,6 +143,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 			
 		} catch (IOException e) {
 			e.printStackTrace();
+			showAlertErrorBox("Error Code: " + e.getClass(), e.getLocalizedMessage());
 			/*
 			 *  -TODO exit scan and throw message box exclaiming failure may 
 			 *        want to make a delegate
@@ -142,13 +153,23 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		return true;
 	}
 	
-	
-	public void AlertConnectionTimeOut(Scraper source){
+	public void alertConnectionTimeOut(Scraper source){
+		showAlertErrorBox("Connection Timeout", "Your connection timed out.\n"
+				+ "Please, check to make sure you are connected to the internet and try again.");
 		//-TODO Alert User of connection timeout. Fail Happy!!!
+	}
+	
+	private boolean pushItemsToDataBase(){
+		
+		return false;
+	}
+	
+	private void showAlertErrorBox(String error, String errorMessage){
+		JOptionPane.showMessageDialog(null, errorMessage, error, JOptionPane.ERROR_MESSAGE);
 	}
 	
 	public static void main(String[] args){
 		EbayScanController ebay = new EbayScanController();
-		ebay.scan();
+		ebay.alertConnectionTimeOut(null);
 	}
 }
