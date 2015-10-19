@@ -114,7 +114,7 @@ public class ScanningGUI implements ScanDelegate{
 
 	@Override
 	public boolean setScanPercentage(WebScannerDelegate source, int percentage) {
-		slider.setValue((int) Math.round((percentage/100.00)*4.5));
+		slider.setValue(new Double((percentage/100.00)*4.5).intValue());
 		//-TODO Check if the second percentage is a single digit and the pre append with a zero if it is.
 		percentLabel.setText(percentage/100 + "." + percentage%100 + "%");
 		return false;
