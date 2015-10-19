@@ -73,23 +73,23 @@ public class ScanningGUI implements ScanDelegate{
 	private void initialize() {
 		frmScanInProgress = new JFrame();
 		frmScanInProgress.setTitle("Scan in progress");
-		frmScanInProgress.setBounds(100, 100, 400, 150);
+		frmScanInProgress.setBounds(100, 100, 600, 150);
 		frmScanInProgress.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScanInProgress.getContentPane().setLayout(null);
 		
 		scanLabel = new JLabel("Scanning: Initializing Scan...");
-		scanLabel.setBounds(80, 11, 69, 14);
+		scanLabel.setBounds(10, 11, 550, 14);
 		frmScanInProgress.getContentPane().add(scanLabel);
 		
 		slider = new JSlider();
 		slider.setValue(sliderValue);
-		slider.setBounds(10, 36, 200, 23);
+		slider.setBounds(10, 36, 450, 23);
 		slider.setFocusable(false);
 		slider.setEnabled(false);
 		frmScanInProgress.getContentPane().add(slider);
 		
 		percentLabel = new JLabel("0%");
-		percentLabel.setBounds(80, 70, 46, 14);
+		percentLabel.setBounds(200, 70, 46, 14);
 		frmScanInProgress.getContentPane().add(percentLabel);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -98,11 +98,11 @@ public class ScanningGUI implements ScanDelegate{
 				frmScanInProgress.setVisible(false);
 			}
 		});
-		btnCancel.setBounds(285, 78, 89, 23);
+		btnCancel.setBounds(485, 78, 89, 23);
 		frmScanInProgress.getContentPane().add(btnCancel);
 		
 		JButton btnNewButton = new JButton("Ok");
-		btnNewButton.setBounds(285, 49, 89, 23);
+		btnNewButton.setBounds(485, 49, 89, 23);
 		frmScanInProgress.getContentPane().add(btnNewButton);
 	}
 
@@ -114,10 +114,9 @@ public class ScanningGUI implements ScanDelegate{
 
 	@Override
 	public boolean setScanPercentage(WebScannerDelegate source, int percentage) {
-		// TODO Auto-generated method stub
-		slider.setValue(++sliderValue);
+		slider.setValue((int) Math.round((percentage/100.00)*4.5));
+		//-TODO Check if the second percentage is a single digit and the pre append with a zero if it is.
 		percentLabel.setText(percentage/100 + "." + percentage%100 + "%");
-		frmScanInProgress.repaint();
 		return false;
 	}
 
@@ -131,10 +130,7 @@ public class ScanningGUI implements ScanDelegate{
 
 	@Override
 	public boolean setStatusText(WebScannerDelegate source, String text) {
-		// TODO Auto-generated method stub
-		slider.setValue(sliderValue);
-		scanLabel.setText("Scanning: " + text);
-		frmScanInProgress.repaint();
+		scanLabel.setText(text);
 		return false;
 	}
 

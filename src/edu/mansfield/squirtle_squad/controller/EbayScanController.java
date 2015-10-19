@@ -87,7 +87,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 						maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
 						if(maxPrice <= minPrice){
 							maxPrice = minPrice + 10;
-							delegate.setStatusText(this, "Something Wierd Happened!");
+							delegate.setStatusText(this, "Something Weird Happened!");
 							break;
 						}
 						
