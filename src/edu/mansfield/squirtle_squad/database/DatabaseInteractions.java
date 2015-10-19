@@ -47,6 +47,18 @@ public class DatabaseInteractions {
 	}
 
 	public void insertData(Connection conn, Item item) throws SQLException {
+		//Sanitize item title.
+		String newTitle = item.getTitle();
+		newTitle = newTitle.replaceAll(":", "");
+		newTitle = newTitle.replaceAll(",", "");
+		newTitle = newTitle.replaceAll(";", "");
+		newTitle = newTitle.replaceAll("*", "");
+		newTitle = newTitle.replaceAll("?", "");
+		newTitle = newTitle.replaceAll("%", "");
+		newTitle = newTitle.replaceAll("!", "");
+		newTitle = newTitle.replaceAll("+", "");
+		
+		
 		Statement stmt = null;
 		stmt = conn.createStatement();
 		int boolValue = 0;
