@@ -1,7 +1,10 @@
 package edu.mansfield.squirtle_squad.user_interface;
 import java.awt.EventQueue;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -15,11 +18,12 @@ import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-
 public class DBGUI {
 
 	private JFrame frmDataviewgui;
 	private JTextField textField;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
 
 	/**
 	 * Launch the application.
@@ -47,7 +51,6 @@ public class DBGUI {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	@SuppressWarnings("serial")
 	private void initialize() {
 		frmDataviewgui = new JFrame();
 		frmDataviewgui.setTitle("DataViewGUI");
@@ -77,26 +80,12 @@ public class DBGUI {
 		frmDataviewgui.getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(375, 38, 200, 20);
-		frmDataviewgui.getContentPane().add(scrollPane);
-		
-		JList<String> list = new JList<String>();
-		scrollPane.setViewportView(list);
-		list.setModel(new AbstractListModel<String>() {
-			String[] values = new String[] {"Lowest Price", "Highest Price", "Item Name", "Item ID", "Bid/Auction", "Site of Origin"};
-			public int getSize() {
-				return values.length;
-			}
-			public String getElementAt(int index) {
-				return values[index];
+		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
 			}
 		});
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		list.setSelectedIndex(0);
-		
-		JButton btnSearch = new JButton("Search");
-		btnSearch.setBounds(485, 80, 89, 23);
+		btnSearch.setBounds(485, 343, 89, 23);
 		frmDataviewgui.getContentPane().add(btnSearch);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -107,5 +96,54 @@ public class DBGUI {
 		});
 		btnCancel.setBounds(485, 428, 89, 23);
 		frmDataviewgui.getContentPane().add(btnCancel);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(315, 60, 109, 101);
+		frmDataviewgui.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		JRadioButton rdbtnNewRadioButton = new JRadioButton("Lowest Price");
+		buttonGroup.add(rdbtnNewRadioButton);
+		rdbtnNewRadioButton.setBounds(0, 0, 109, 23);
+		panel.add(rdbtnNewRadioButton);
+		
+		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Item ID");
+		buttonGroup.add(rdbtnNewRadioButton_1);
+		rdbtnNewRadioButton_1.setBounds(0, 78, 109, 23);
+		panel.add(rdbtnNewRadioButton_1);
+		
+		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Highest Price");
+		buttonGroup.add(rdbtnNewRadioButton_2);
+		rdbtnNewRadioButton_2.setBounds(0, 26, 109, 23);
+		panel.add(rdbtnNewRadioButton_2);
+		
+		JRadioButton rdbtnNewRadioButton_4 = new JRadioButton("Item Name");
+		buttonGroup.add(rdbtnNewRadioButton_4);
+		rdbtnNewRadioButton_4.setBounds(0, 52, 109, 23);
+		panel.add(rdbtnNewRadioButton_4);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(426, 60, 109, 101);
+		frmDataviewgui.getContentPane().add(panel_1);
+		panel_1.setLayout(null);
+		
+		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("Bid");
+		buttonGroup_1.add(rdbtnNewRadioButton_3);
+		rdbtnNewRadioButton_3.setBounds(0, 26, 109, 23);
+		panel_1.add(rdbtnNewRadioButton_3);
+		
+		JRadioButton rdbtnNewRadioButton_5 = new JRadioButton("Buy Now");
+		buttonGroup_1.add(rdbtnNewRadioButton_5);
+		rdbtnNewRadioButton_5.setBounds(0, 52, 109, 23);
+		panel_1.add(rdbtnNewRadioButton_5);
+		
+		JRadioButton rdbtnNewRadioButton_6 = new JRadioButton("All Items");
+		buttonGroup_1.add(rdbtnNewRadioButton_6);
+		rdbtnNewRadioButton_6.setBounds(0, 0, 109, 23);
+		panel_1.add(rdbtnNewRadioButton_6);
+		
+		JLabel lblNewLabel_1 = new JLabel("Item Type:");
+		lblNewLabel_1.setBounds(431, 39, 89, 14);
+		frmDataviewgui.getContentPane().add(lblNewLabel_1);
 	}
 }
