@@ -18,7 +18,7 @@ import java.util.Date;
 
 
 public class ScanningGUI implements ScanDelegate{
-
+	EbayScanController scanController = new EbayScanController(this);
 	private JFrame frmScanInProgress;
 	
 	private JLabel percentLabel;
@@ -46,7 +46,7 @@ public class ScanningGUI implements ScanDelegate{
 	 */
 	public ScanningGUI() {
 		initialize();
-		EbayScanController scanController = new EbayScanController(this);
+
 		
 		new Thread(new Runnable() {
 			public void run() {
@@ -58,8 +58,7 @@ public class ScanningGUI implements ScanDelegate{
 	public ScanningGUI(StartGUIDelegate delegate) {
 		initialize();
 		
-		EbayScanController scanController = new EbayScanController(this);
-		
+		scanController = new EbayScanController(this);
 		new Thread(new Runnable() {
 			public void run() {
 				scanController.scan();
@@ -96,6 +95,8 @@ public class ScanningGUI implements ScanDelegate{
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmScanInProgress.setVisible(false);
+				
+				
 			}
 		});
 		btnCancel.setBounds(485, 78, 89, 23);
@@ -103,6 +104,16 @@ public class ScanningGUI implements ScanDelegate{
 		
 		JButton btnNewButton = new JButton("Ok");
 		btnNewButton.setBounds(485, 49, 89, 23);
+		btnNewButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0){
+				if(percentLabel.getText().equals("100%")){
+				frmScanInProgress.setVisible(false);	
+				DBGUI.main(null);
+				}
+				
+			}
+		});
+			
 		frmScanInProgress.getContentPane().add(btnNewButton);
 	}
 
@@ -133,5 +144,6 @@ public class ScanningGUI implements ScanDelegate{
 		scanLabel.setText(text);
 		return false;
 	}
+
 
 }
