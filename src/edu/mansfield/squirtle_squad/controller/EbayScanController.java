@@ -1,5 +1,6 @@
 package edu.mansfield.squirtle_squad.controller;
 
+import edu.mansfield.squirtle_squad.database.DatabaseInteractions;
 import edu.mansfield.squirtle_squad.delegates.ScanDelegate;
 import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 import edu.mansfield.squirtle_squad.model.Item;
@@ -9,8 +10,9 @@ import edu.mansfield.squirtle_squad.scraper.Scraper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
@@ -30,8 +32,8 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	
 	private ArrayList<String> categories;
 	private int scanLength; 
-	private int scanPercent;
-	private int percentIncrementPerCategory;
+//	private int scanPercent;
+//	private int percentIncrementPerCategory;
 	private Hashtable<Long, Item> items;
 	private ScanDelegate delegate; 
 	
@@ -72,7 +74,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 				
 				items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
 				delegate.setStatusText(this, "Downloading: " + categoryURL);
-				System.out.println("Downloading: " + categoryURL);
 				
 				// Begin the scraping process for the current category
 				do{
@@ -92,8 +93,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 						
 						priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
 						
-						
-						
 						String testString = url + "?_png=1" + priceRange;
 						scraper = new EbayScraper(this, testString);
 						delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
@@ -102,29 +101,20 @@ public class EbayScanController extends ScanController implements WebScannerDele
 					priceIncrement = Math.abs(2*(maxPrice - minPrice));
 					minPrice = maxPrice;
 					
-					System.out.println("Num Items In Price Range: " + scraper.getItemCount());
-					
-	//				for(int i = 0; i < scraper.getItemCount()/ITEMS_PER_PAGE; i++){
-	//					
-	//					itemPage = "?_png=1&_pgn=" + (i+1) + "&_skc=" + i*ITEMS_PER_PAGE;
-	//					scraper = new EbayScraper(url + itemPage + priceRange);
-						scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
-						delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
-						for(Item item: scraper.getItemsListed()){
-							
-							 if(!items.containsKey(item.getId())){
-								 items.put(item.getId(), item);
-							 }
-						}
-						itemsDownloaded += scraper.getItemCount();
-						//System.out.println("Downloaded: " + url + priceRange);
-						//System.out.println("Items Downloaded: " + itemsDownloaded);
-	//				}
+					scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
+					delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
+					for(Item item: scraper.getItemsListed()){
+						
+						 if(!items.containsKey(item.getId())){
+							 items.put(item.getId(), item);
+						 }
+					}
+					itemsDownloaded += scraper.getItemCount();
 					
 				// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
 				}while(itemsDownloaded < numberOfItemsInCategory);
 				
-				delegate.incrementScanPercentage(this, scanLength / currentCategory++);
+				delegate.setScanPercentage(this, new Double((++currentCategory * 10000.0) / scanLength).intValue());
 				System.out.println("Category " + categoryURL + " is done.");
 				// -TODO increment scan percent and update time for scan
 			}
@@ -139,7 +129,8 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		try {
 			categories = Ebay_Cat.getAllCategories();
 			scanLength = categories.size();
-			scanPercent = 0;
+			//System.out.println(scanLength);
+			//scanPercent = 0;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -160,8 +151,20 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	}
 	
 	private boolean pushItemsToDataBase(){
+		DatabaseInteractions dbInteract = new DatabaseInteractions();
+		Connection dbConnect = dbInteract.dbConnect();
 		
-		return false;
+		for(Item item: items.values()){
+			try {
+				dbInteract.insertData(dbConnect, item);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				// Perhaps
+				return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	private void showAlertErrorBox(String error, String errorMessage){

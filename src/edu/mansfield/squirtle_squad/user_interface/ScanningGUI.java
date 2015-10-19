@@ -13,12 +13,18 @@ import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.time.Instant;
+import java.util.Date;
 
 
 public class ScanningGUI implements ScanDelegate{
 
 	private JFrame frmScanInProgress;
-	private StartGUIDelegate delegate;
+	
+	private JLabel percentLabel;
+	private JSlider slider;
+	private JLabel scanLabel;
+	private int sliderValue = 0; 
 	/**
 	 * Launch the application.
 	 */
@@ -41,14 +47,24 @@ public class ScanningGUI implements ScanDelegate{
 	public ScanningGUI() {
 		initialize();
 		EbayScanController scanController = new EbayScanController(this);
-		scanController.scan();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				scanController.scan();
+			}
+		}, "scan_process").start(); 
 	}
 	
 	public ScanningGUI(StartGUIDelegate delegate) {
-		this.delegate = delegate;
 		initialize();
+		
 		EbayScanController scanController = new EbayScanController(this);
-		scanController.scan();
+		
+		new Thread(new Runnable() {
+			public void run() {
+				scanController.scan();
+			}
+		}, "scan_process").start(); 
 	}
 
 	/**
@@ -61,20 +77,20 @@ public class ScanningGUI implements ScanDelegate{
 		frmScanInProgress.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScanInProgress.getContentPane().setLayout(null);
 		
-		JLabel lblScanning = new JLabel("Scanning...");
-		lblScanning.setBounds(80, 11, 69, 14);
-		frmScanInProgress.getContentPane().add(lblScanning);
+		scanLabel = new JLabel("Scanning: Initializing Scan...");
+		scanLabel.setBounds(80, 11, 69, 14);
+		frmScanInProgress.getContentPane().add(scanLabel);
 		
-		JSlider slider = new JSlider();
-		slider.setValue(0);
+		slider = new JSlider();
+		slider.setValue(sliderValue);
 		slider.setBounds(10, 36, 200, 23);
 		slider.setFocusable(false);
 		slider.setEnabled(false);
 		frmScanInProgress.getContentPane().add(slider);
 		
-		JLabel label = new JLabel("%%%");
-		label.setBounds(80, 70, 46, 14);
-		frmScanInProgress.getContentPane().add(label);
+		percentLabel = new JLabel("0%");
+		percentLabel.setBounds(80, 70, 46, 14);
+		frmScanInProgress.getContentPane().add(percentLabel);
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
@@ -99,6 +115,9 @@ public class ScanningGUI implements ScanDelegate{
 	@Override
 	public boolean setScanPercentage(WebScannerDelegate source, int percentage) {
 		// TODO Auto-generated method stub
+		slider.setValue(++sliderValue);
+		percentLabel.setText(percentage/100 + "." + percentage%100 + "%");
+		frmScanInProgress.repaint();
 		return false;
 	}
 
@@ -113,6 +132,9 @@ public class ScanningGUI implements ScanDelegate{
 	@Override
 	public boolean setStatusText(WebScannerDelegate source, String text) {
 		// TODO Auto-generated method stub
+		slider.setValue(sliderValue);
+		scanLabel.setText("Scanning: " + text);
+		frmScanInProgress.repaint();
 		return false;
 	}
 

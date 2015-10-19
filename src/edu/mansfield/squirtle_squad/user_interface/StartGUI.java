@@ -14,13 +14,16 @@ import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.time.Instant;
+import java.util.Date;
 
 
 
-public class StartGUI implements StartGUIDelegate{
+public class StartGUI{
 
 	private JFrame frmScraperBot;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	JLabel lblTimetag;
 
 	/**
 	 * Launch the application.
@@ -58,6 +61,7 @@ public class StartGUI implements StartGUIDelegate{
 		JButton btnSubmit = new JButton("Scan");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				lblTimetag.setText(Date.from(Instant.now()).toString());
 				ScanningGUI.main(null);
 			}
 		});
@@ -90,7 +94,7 @@ public class StartGUI implements StartGUIDelegate{
 		lblTimeSinceLast.setBounds(10, 81, 133, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
 		
-		JLabel lblTimetag = new JLabel("TimeTag");
+		lblTimetag = new JLabel("TimeTag");
 		lblTimetag.setBounds(144, 81, 65, 14);
 		frmScraperBot.getContentPane().add(lblTimetag);
 		
@@ -117,11 +121,5 @@ public class StartGUI implements StartGUIDelegate{
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
-	}
-
-	@Override
-	public boolean setLastScanTime(ScanningGUI source, String time) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 }

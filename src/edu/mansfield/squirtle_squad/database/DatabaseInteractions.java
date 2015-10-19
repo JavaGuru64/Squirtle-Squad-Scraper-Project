@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 import edu.mansfield.squirtle_squad.model.Item;
 
-public class Database_Interactions {
+public class DatabaseInteractions {
 	public Connection dbConnect() {
 		Connection conn = null;
 		try {
@@ -110,7 +110,7 @@ public class Database_Interactions {
 
 	public void updateData(Connection conn, Item item, long replaceID)
 			throws SQLException {
-		Database_Interactions DI = new Database_Interactions();
+		DatabaseInteractions DI = new DatabaseInteractions();
 		DI.deleteData(conn, replaceID);
 		DI.insertData(conn, item);
 
