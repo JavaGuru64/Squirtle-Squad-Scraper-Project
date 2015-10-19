@@ -13,9 +13,6 @@ import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.time.Instant;
-import java.util.Date;
-
 
 public class ScanningGUI implements ScanDelegate{
 	EbayScanController scanController = new EbayScanController(this);
@@ -24,7 +21,8 @@ public class ScanningGUI implements ScanDelegate{
 	private JLabel percentLabel;
 	private JSlider slider;
 	private JLabel scanLabel;
-	private int sliderValue = 0; 
+	private int sliderValue = 0;
+	private int percentage;
 	/**
 	 * Launch the application.
 	 */
@@ -70,6 +68,8 @@ public class ScanningGUI implements ScanDelegate{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		percentage = 0;
+		
 		frmScanInProgress = new JFrame();
 		frmScanInProgress.setTitle("Scan in progress");
 		frmScanInProgress.setBounds(100, 100, 600, 150);
@@ -119,15 +119,17 @@ public class ScanningGUI implements ScanDelegate{
 
 	@Override
 	public boolean incrementScanPercentage(WebScannerDelegate source, int amountToIncrement) {
-		// TODO Auto-generated method stub
+		percentage += amountToIncrement;
+		slider.setValue(new Double((percentage/100.00)*(slider.getMaximum()/100.00)).intValue());
+		percentLabel.setText(percentage/100 + "." + (percentage%100<10?"0"+percentage%100:percentage%100) + "%");
 		return false;
 	}
 
 	@Override
 	public boolean setScanPercentage(WebScannerDelegate source, int percentage) {
-		slider.setValue(new Double((percentage/100.00)*4.5).intValue());
-		//-TODO Check if the second percentage is a single digit and the pre append with a zero if it is.
-		percentLabel.setText(percentage/100 + "." + percentage%100 + "%");
+		this.percentage = percentage;
+		slider.setValue(new Double((percentage/100.00)*(slider.getMaximum()/100.00)).intValue());
+		percentLabel.setText(percentage/100 + "." + (percentage%100<10?"0"+percentage%100:percentage%100) + "%");
 		return false;
 	}
 

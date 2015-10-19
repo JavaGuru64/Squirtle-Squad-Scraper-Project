@@ -8,11 +8,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.JList;
-import javax.swing.AbstractListModel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.ListSelectionModel;
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;

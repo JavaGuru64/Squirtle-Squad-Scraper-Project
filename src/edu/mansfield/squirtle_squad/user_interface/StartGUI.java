@@ -7,10 +7,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-//import javax.swing.JRadioButton;
-import javax.swing.ButtonGroup;
-
-import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -22,7 +18,6 @@ import java.util.Date;
 public class StartGUI{
 
 	private JFrame frmScraperBot;
-	private final ButtonGroup buttonGroup = new ButtonGroup();
 	JLabel lblTimetag;
 
 	/**

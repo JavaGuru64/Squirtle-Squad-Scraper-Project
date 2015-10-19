@@ -51,6 +51,7 @@ public class HelpGUI {
 			while(sc.hasNext()){
 				readMeText += sc.nextLine() + "\n";
 			}
+			sc.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}

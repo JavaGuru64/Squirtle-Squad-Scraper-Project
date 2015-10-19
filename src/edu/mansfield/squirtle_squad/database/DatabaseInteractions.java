@@ -49,15 +49,7 @@ public class DatabaseInteractions {
 	public void insertData(Connection conn, Item item) throws SQLException {
 		//Sanitize item title.
 		String newTitle = item.getTitle();
-		newTitle = newTitle.replaceAll(":", "");
-		newTitle = newTitle.replaceAll(",", "");
-		newTitle = newTitle.replaceAll(";", "");
-		newTitle = newTitle.replaceAll("*", "");
-		newTitle = newTitle.replaceAll("?", "");
-		newTitle = newTitle.replaceAll("%", "");
-		newTitle = newTitle.replaceAll("!", "");
-		newTitle = newTitle.replaceAll("+", "");
-		
+		newTitle = newTitle.replaceAll("\"", "");
 		
 		Statement stmt = null;
 		stmt = conn.createStatement();
@@ -68,9 +60,9 @@ public class DatabaseInteractions {
 		String sql = "INSERT INTO EbayData (id, title, price, bidTime, isAuction)"
 				+ " VALUES ("
 				+ Long.toString(item.getId())
-				+ ", "
-				+ item.getTitle()
-				+ ", "
+				+ ", \""
+				+ newTitle
+				+ "\", "
 				+ Double.toString(item.getPrice())
 				+ ", "
 				+ Long.toString(item.getBidTime())
@@ -122,9 +114,20 @@ public class DatabaseInteractions {
 
 	public void updateData(Connection conn, Item item, long replaceID)
 			throws SQLException {
-		DatabaseInteractions DI = new DatabaseInteractions();
-		DI.deleteData(conn, replaceID);
-		DI.insertData(conn, item);
+		deleteData(conn, replaceID);
+		insertData(conn, item);
 
+	}
+	
+	public void addOrUpdateData(Connection conn, Item item) throws SQLException{
+		Statement stmt = conn.createStatement();
+		String sqlTest = "SELECT id FROM EbayData WHERE id =" + item.getId() + ";";
+		ResultSet testResultSet = stmt.executeQuery(sqlTest);
+		
+		if(testResultSet.next()){
+			updateData(conn, item, item.getId());
+		}else{
+			insertData(conn, item);
+		}
 	}
 }

@@ -33,7 +33,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	private ArrayList<String> categories;
 	private int scanLength; 
 //	private int scanPercent;
-//	private int percentIncrementPerCategory;
+    private int percentIncrementPerCategory;
 	private Hashtable<Long, Item> items;
 	private ScanDelegate delegate; 
 	
@@ -48,7 +48,48 @@ public class EbayScanController extends ScanController implements WebScannerDele
 
 
 	public void scan() {
-		
+		try{
+			ArrayList<Thread> threads = new ArrayList<Thread>();
+			EbayScanController referenceToThis = this;
+			for(String categoryURL: categories){
+				Thread aThread = new Thread(new Runnable(){
+					@Override
+					public void run(){
+						try{
+							scanCategory(new String(categoryURL));
+						}
+						catch(IOException exception){
+							exception.printStackTrace();
+						}
+						delegate.incrementScanPercentage(referenceToThis, percentIncrementPerCategory);
+					}
+				}, categoryURL);
+				
+				aThread.start();
+				
+				threads.add(aThread);
+			}
+			
+			boolean threadsAreAlive;
+			do{
+				threadsAreAlive = false;
+				
+				for(Thread thread: threads){
+					System.out.println(thread.getName()+ ": " + (thread.isAlive()?" is alive": " is dead"));
+					if(thread.isAlive()){
+						threadsAreAlive = true;
+					}
+				}
+				Thread.sleep(1000);
+			}while(threadsAreAlive);
+			pushItemsToDataBase();
+		}catch(Exception e){
+			e.printStackTrace();
+			// -TODO Fail nice
+		}
+	}
+	
+	public void scanCategory(String categoryURL) throws IOException{
 		String url;
 		EbayScraper scraper;
 //		String itemPage;
@@ -58,77 +99,63 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		int maxPrice;
 		int priceIncrement;
 		
-		try{
-			// Step through the catagories and scrape ALL THE DATUM!!!
+		url = categoryURL;
+		itemsDownloaded = 0;
+		minPrice = 0;
+		maxPrice = 10;
+		priceIncrement = maxPrice - minPrice;
+		
+		scraper = new EbayScraper(this, url);
+		numberOfItemsInCategory = scraper.getItemCount();
+		
+		items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
+		delegate.setStatusText(this, "Downloading: " + categoryURL);
+		
+		// Begin the scraping process for the current category
+		do{
+			String priceRange = "";
+			int maxPriceDividor = 0;
 			
-			int currentCategory = 0;
-			for(String categoryURL: categories){
-				url = categoryURL;
-				itemsDownloaded = 0;
-				minPrice = 0;
-				maxPrice = 10;
-				priceIncrement = maxPrice - minPrice;
+			scraper = new EbayScraper(this, url);
+			while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000){
+				maxPriceDividor++;
 				
-				scraper = new EbayScraper(this, url);
-				numberOfItemsInCategory = scraper.getItemCount();
+				maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
+				if(maxPrice <= minPrice){
+					maxPrice = minPrice + 10;
+					delegate.setStatusText(this, "Something Weird Happened!");
+					break;
+				}
 				
-				items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
-				delegate.setStatusText(this, "Downloading: " + categoryURL);
+				priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
 				
-				// Begin the scraping process for the current category
-				do{
-					String priceRange = "";
-					int maxPriceDividor = 0;
-					
-					scraper = new EbayScraper(this, url);
-					while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000){
-						maxPriceDividor++;
-						
-						maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
-						if(maxPrice <= minPrice){
-							maxPrice = minPrice + 10;
-							delegate.setStatusText(this, "Something Weird Happened!");
-							break;
-						}
-						
-						priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
-						
-						String testString = url + "?_png=1" + priceRange;
-						scraper = new EbayScraper(this, testString);
-						delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
-								+ " | " + scraper.getItemCount() + " Items in range");
-					}
-					priceIncrement = Math.abs(2*(maxPrice - minPrice));
-					minPrice = maxPrice;
-					
-					scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
-					delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
-					for(Item item: scraper.getItemsListed()){
-						
-						 if(!items.containsKey(item.getId())){
-							 items.put(item.getId(), item);
-						 }
-					}
-					itemsDownloaded += scraper.getItemCount();
-					
-				// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
-				}while(itemsDownloaded < numberOfItemsInCategory);
-				
-				delegate.setScanPercentage(this, new Double((++currentCategory * 10000.0) / scanLength).intValue());
-				System.out.println("Category " + categoryURL + " is done.");
-				// -TODO increment scan percent and update time for scan
+				String testString = url + "?_png=1" + priceRange;
+				scraper = new EbayScraper(this, testString);
+				delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
+						+ " | " + scraper.getItemCount() + " Items in range");
 			}
-			pushItemsToDataBase();
-		}catch(IOException e){
-			e.printStackTrace();
-			// -TODO Fail nice
-		}
+			priceIncrement = Math.abs(2*(maxPrice - minPrice));
+			minPrice = maxPrice;
+			
+			scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
+			delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
+			for(Item item: scraper.getItemsListed()){
+				
+				 if(!items.containsKey(item.getId())){
+					 items.put(item.getId(), item);
+				 }
+			}
+			itemsDownloaded += scraper.getItemCount();
+			
+		// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
+		}while(itemsDownloaded < numberOfItemsInCategory);
 	}
 
 	protected boolean initializeScan(){
 		try {
 			categories = Ebay_Cat.getAllCategories();
 			scanLength = categories.size();
+			percentIncrementPerCategory = 10000/scanLength;
 			//System.out.println(scanLength);
 			//scanPercent = 0;
 			
@@ -156,7 +183,8 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		
 		for(Item item: items.values()){
 			try {
-				dbInteract.insertData(dbConnect, item);
+				System.out.println(item);
+				dbInteract.addOrUpdateData(dbConnect, item);
 			} catch (SQLException e) {
 				e.printStackTrace();
 				// Perhaps
