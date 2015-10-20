@@ -83,7 +83,11 @@ public class EbayScanController extends ScanController implements WebScannerDele
 					}
 				}
 				Thread.sleep(1000);
-			}while(threadsAreAlive);
+			}while(threadsAreAlive && !isCanceled);
+			
+			for(Thread thread: threads){
+				thread.join();
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 			// -TODO Fail nice
@@ -178,7 +182,8 @@ public class EbayScanController extends ScanController implements WebScannerDele
 				//System.out.println(item);
 				dbInteract.addOrUpdateData(dbConnect, item);
 			} catch (SQLException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
+				// Thread conflic usually;
 				// Perhaps
 				return false;
 			}
