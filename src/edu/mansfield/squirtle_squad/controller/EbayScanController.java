@@ -191,7 +191,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		for(Item item: items){
 			DatabaseInteractions dbInteract = new DatabaseInteractions();
 			try {
-				System.out.println(item);
+				//System.out.println(item);
 				dbInteract.addOrUpdateData(dbConnect, item);
 			} catch (SQLException e) {
 				e.printStackTrace();
