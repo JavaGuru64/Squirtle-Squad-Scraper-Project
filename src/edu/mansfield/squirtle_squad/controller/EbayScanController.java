@@ -11,7 +11,6 @@ import edu.mansfield.squirtle_squad.scraper.Scraper;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Hashtable;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -92,7 +91,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	
 	public void scanCategory(String categoryURL) throws IOException{
 		EbayScraper scraper;
-//		String itemPage;
 		int numberOfItemsInCategory;
 		int itemsDownloaded;
 		int minPrice;
@@ -107,8 +105,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		
 		scraper = new EbayScraper(this, url);
 		numberOfItemsInCategory = scraper.getItemCount();
-		
-		Hashtable<Long, Item> items = new Hashtable<Long, Item>(2*numberOfItemsInCategory/200);
 		delegate.setStatusText(this, "Downloading: " + categoryURL);
 		
 		// Begin the scraping process for the current category
@@ -134,28 +130,17 @@ public class EbayScanController extends ScanController implements WebScannerDele
 				delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
 						+ " | " + scraper.getItemCount() + " Items in range");
 			}
+			
 			priceIncrement = Math.abs(2*(maxPrice - minPrice));
 			minPrice = maxPrice;
 			
 			scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
 			delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
-			for(Item item: scraper.getItemsListed()){
-				
-				 if(!items.containsKey(item.getId())){
-					 items.put(item.getId(), item);
-				 }
-				 if(isCanceled){
-					 break;
-				 }
-			}
+			pushItemsToDataBase(scraper.getItemsListed());
 			itemsDownloaded += scraper.getItemCount();
 			
 		// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
 		}while(itemsDownloaded < numberOfItemsInCategory && !isCanceled);
-		
-		if(!isCanceled){
-			pushItemsToDataBase(items.values());
-		}
 	}
 
 	protected boolean initializeScan(){
