@@ -63,10 +63,84 @@ public class EbayScanController extends ScanController implements WebScannerDele
 							exception.printStackTrace();
 							System.out.println("This is a Problem!");
 						}
-						delegate.incrementScanPercentage(referenceToThis, percentIncrementPerCategory);
+						if(!isCanceled){
+							delegate.incrementScanPercentage(referenceToThis, percentIncrementPerCategory);
+						}
+					}
+					
+					public void scanCategory(String categoryURL) throws IOException{
+						EbayScraper scraper;
+						int numberOfItemsInCategory;
+						int itemsDownloaded;
+						int minPrice;
+						int maxPrice;
+						int priceIncrement;
+						
+						String url = categoryURL;
+						itemsDownloaded = 0;
+						minPrice = 0;
+						maxPrice = 10;
+						priceIncrement = maxPrice - minPrice;
+						
+						if(!isCanceled){
+							scraper = new EbayScraper( referenceToThis, url);
+							numberOfItemsInCategory = scraper.getItemCount();
+						}else{
+							numberOfItemsInCategory = 0;
+						}
+						
+						//delegate.setStatusText(referenceToThis, "Downloading: " + categoryURL);
+						
+						String priceRange = "";
+						int maxPriceDividor = 0;
+						// Begin the scraping process for the current category
+						
+						System.out.println("This is not a Problem!");
+						while(itemsDownloaded < numberOfItemsInCategory && !isCanceled){
+							System.out.println(categoryURL + " says that isCanceled is " + isCanceled);
+							priceRange = "";
+							maxPriceDividor = 0;
+							
+							if(!isCanceled){
+								scraper = new EbayScraper(referenceToThis, url);
+								while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000 && !isCanceled){
+									maxPriceDividor++;
+									
+									maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
+									if(maxPrice <= minPrice){
+										maxPrice = minPrice + 10;
+										break;
+									}
+									
+									priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
+									if(!isCanceled){
+										scraper = new EbayScraper(referenceToThis, url + "?_png=1" + priceRange);
+										System.out.println(categoryURL + ": Checking Price Range!");
+									}
+								}
+							}
+							
+							priceIncrement = Math.abs(2*(maxPrice - minPrice));
+							minPrice = maxPrice;
+							
+							if(!isCanceled){
+								scraper = new EbayScraper(referenceToThis, url + "?_png=1" + priceRange);
+								delegate.setStatusText(referenceToThis, "Downloading: " + url + "?_png=1" + priceRange);
+								pushItemsToDataBase(scraper.getItemsListed());
+								itemsDownloaded += scraper.getItemCount();
+								System.out.println(categoryURL + ": Downloaded");
+							}
+							
+						// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
+						}
+						
+						if(isCanceled){
+							delegate.setStatusText(referenceToThis, "Canceling...");
+						}
 					}
 				}, categoryURL);
 				
+				aThread.setPriority(Thread.MAX_PRIORITY);
 				aThread.start();
 				
 				threads.add(aThread);
@@ -82,73 +156,23 @@ public class EbayScanController extends ScanController implements WebScannerDele
 						threadsAreAlive = true;
 					}
 				}
-				Thread.sleep(1000);
+				//Thread.sleep(1000);
 			}while(threadsAreAlive && !isCanceled);
 			
 			for(Thread thread: threads){
 				thread.join();
+				System.out.println("I'm Dying");
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 			// -TODO Fail nice
 		}
-	}
-	
-	public void scanCategory(String categoryURL) throws IOException{
-		EbayScraper scraper;
-		int numberOfItemsInCategory;
-		int itemsDownloaded;
-		int minPrice;
-		int maxPrice;
-		int priceIncrement;
-		
-		String url = categoryURL;
-		itemsDownloaded = 0;
-		minPrice = 0;
-		maxPrice = 10;
-		priceIncrement = maxPrice - minPrice;
-		
-		scraper = new EbayScraper(this, url);
-		numberOfItemsInCategory = scraper.getItemCount();
-		delegate.setStatusText(this, "Downloading: " + categoryURL);
-		
-		String priceRange = "";
-		int maxPriceDividor = 0;
-		// Begin the scraping process for the current category
-		do{
-			priceRange = "";
-			maxPriceDividor = 0;
-			scraper = new EbayScraper(this, url);
-			
-			while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000 && !isCanceled){
-				maxPriceDividor++;
-				
-				maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
-				if(maxPrice <= minPrice){
-					maxPrice = minPrice + 10;
-					break;
-				}
-				
-				priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
-				
-				scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
-			}
-			
-			priceIncrement = Math.abs(2*(maxPrice - minPrice));
-			minPrice = maxPrice;
-			
-			scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
-			delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
-			pushItemsToDataBase(scraper.getItemsListed());
-			itemsDownloaded += scraper.getItemCount();
-			
-		// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
-		}while(itemsDownloaded < numberOfItemsInCategory && !isCanceled);
+		delegate.scanEndedCleanup(this);
 	}
 
 	protected boolean initializeScan(){
 		try {
-			categories = Ebay_Cat.getAllCategories();
+			categories = new ArrayList<String>(Ebay_Cat.getAllCategories());
 			scanLength = categories.size();
 			percentIncrementPerCategory = 10000/scanLength;
 			DatabaseInteractions dbInteract = new DatabaseInteractions();

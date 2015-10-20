@@ -14,7 +14,7 @@ import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-public class ScanningGUI implements ScanDelegate{
+public class ScanningGUI extends SubGUI implements ScanDelegate{
 	EbayScanController scanController = new EbayScanController(this);
 	private JFrame frmScanInProgress;
 	
@@ -24,6 +24,7 @@ public class ScanningGUI implements ScanDelegate{
 	private int sliderValue = 0;
 	private int percentage;
 	private Thread scanThread;
+	private StartGUIDelegate startGUI;
 	/**
 	 * Launch the application.
 	 */
@@ -45,18 +46,18 @@ public class ScanningGUI implements ScanDelegate{
 	 */
 	public ScanningGUI() {
 		initialize();
-
-		
-		new Thread(new Runnable() {
+		scanThread = new Thread(new Runnable() {
 			public void run() {
 				scanController.scan();
 			}
-		}, "scan_process").start(); 
+		}, "scan_process");
+		scanThread.setPriority(Thread.MAX_PRIORITY);
+		scanThread.start(); 
+		this.frmScanInProgress.setVisible(true);
 	}
 	
 	public ScanningGUI(StartGUIDelegate delegate) {
 		initialize();
-		
 		scanController = new EbayScanController(this);
 		scanThread = new Thread(new Runnable() {
 			public void run() {
@@ -65,6 +66,7 @@ public class ScanningGUI implements ScanDelegate{
 		}, "scan_process");
 		
 		scanThread.start();
+		this.frmScanInProgress.setVisible(true);
 	}
 
 	/**
@@ -98,8 +100,9 @@ public class ScanningGUI implements ScanDelegate{
 		btnCancel.setBounds(485, 78, 89, 23);
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				scanLabel.setText("Canceling...");
 				scanController.kill();
-				frmScanInProgress.dispose();
+				//frmScanInProgress.setVisible(false);
 				
 			}
 		});
@@ -116,7 +119,6 @@ public class ScanningGUI implements ScanDelegate{
 				
 			}
 		});
-			
 		frmScanInProgress.getContentPane().add(btnNewButton);
 	}
 
@@ -147,6 +149,26 @@ public class ScanningGUI implements ScanDelegate{
 	@Override
 	public boolean setStatusText(WebScannerDelegate source, String text) {
 		scanLabel.setText(text);
+		return false;
+	}
+
+	@Override
+	public boolean scanEndedCleanup(WebScannerDelegate source) {
+		if(startGUI != null){
+			startGUI.releaseSubGUIs(this);
+			while(scanThread.isAlive()){
+				try{
+					scanThread.join();
+				}catch(InterruptedException e){
+					e.printStackTrace();
+				}
+			}
+			startGUI = null;
+			frmScanInProgress.dispose();
+		}else{
+			System.exit(0);
+		}
+
 		return false;
 	}
 
