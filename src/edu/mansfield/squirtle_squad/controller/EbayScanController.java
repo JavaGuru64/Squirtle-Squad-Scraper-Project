@@ -61,6 +61,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 						}
 						catch(IOException exception){
 							exception.printStackTrace();
+							System.out.println("This is a Problem!");
 						}
 						delegate.incrementScanPercentage(referenceToThis, percentIncrementPerCategory);
 					}
@@ -107,26 +108,26 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		numberOfItemsInCategory = scraper.getItemCount();
 		delegate.setStatusText(this, "Downloading: " + categoryURL);
 		
+		String priceRange = "";
+		int maxPriceDividor = 0;
 		// Begin the scraping process for the current category
 		do{
-			String priceRange = "";
-			int maxPriceDividor = 0;
-			
+			priceRange = "";
+			maxPriceDividor = 0;
 			scraper = new EbayScraper(this, url);
+			
 			while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000 && !isCanceled){
 				maxPriceDividor++;
 				
 				maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
 				if(maxPrice <= minPrice){
 					maxPrice = minPrice + 10;
-					delegate.setStatusText(this, "Something Weird Happened!");
 					break;
 				}
 				
 				priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
 				
-				String testString = url + "?_png=1" + priceRange;
-				scraper = new EbayScraper(this, testString);
+				scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
 				delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
 						+ " | " + scraper.getItemCount() + " Items in range");
 			}
