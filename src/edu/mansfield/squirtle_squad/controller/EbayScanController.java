@@ -10,6 +10,7 @@ import edu.mansfield.squirtle_squad.scraper.Scraper;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -34,8 +35,9 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	private int scanLength; 
 //	private int scanPercent;
     private int percentIncrementPerCategory;
-	private Hashtable<Long, Item> items;
 	private ScanDelegate delegate; 
+	private boolean isCanceled;
+	private Connection dbConnect;
 	
 	public EbayScanController(ScanDelegate delegate) {
 		this.delegate = delegate;
@@ -75,14 +77,13 @@ public class EbayScanController extends ScanController implements WebScannerDele
 				threadsAreAlive = false;
 				
 				for(Thread thread: threads){
-					System.out.println(thread.getName()+ ": " + (thread.isAlive()?" is alive": " is dead"));
+					//System.out.println(thread.getName()+ ": " + (thread.isAlive()?" is alive": " is dead"));
 					if(thread.isAlive()){
 						threadsAreAlive = true;
 					}
 				}
 				Thread.sleep(1000);
 			}while(threadsAreAlive);
-			pushItemsToDataBase();
 		}catch(Exception e){
 			e.printStackTrace();
 			// -TODO Fail nice
@@ -90,7 +91,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	}
 	
 	public void scanCategory(String categoryURL) throws IOException{
-		String url;
 		EbayScraper scraper;
 //		String itemPage;
 		int numberOfItemsInCategory;
@@ -99,7 +99,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		int maxPrice;
 		int priceIncrement;
 		
-		url = categoryURL;
+		String url = categoryURL;
 		itemsDownloaded = 0;
 		minPrice = 0;
 		maxPrice = 10;
@@ -108,7 +108,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		scraper = new EbayScraper(this, url);
 		numberOfItemsInCategory = scraper.getItemCount();
 		
-		items = new Hashtable<Long, Item>(2*numberOfItemsInCategory);
+		Hashtable<Long, Item> items = new Hashtable<Long, Item>(2*numberOfItemsInCategory/200);
 		delegate.setStatusText(this, "Downloading: " + categoryURL);
 		
 		// Begin the scraping process for the current category
@@ -117,7 +117,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 			int maxPriceDividor = 0;
 			
 			scraper = new EbayScraper(this, url);
-			while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000){
+			while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000 && !isCanceled){
 				maxPriceDividor++;
 				
 				maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
@@ -144,11 +144,18 @@ public class EbayScanController extends ScanController implements WebScannerDele
 				 if(!items.containsKey(item.getId())){
 					 items.put(item.getId(), item);
 				 }
+				 if(isCanceled){
+					 break;
+				 }
 			}
 			itemsDownloaded += scraper.getItemCount();
 			
 		// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
-		}while(itemsDownloaded < numberOfItemsInCategory);
+		}while(itemsDownloaded < numberOfItemsInCategory && !isCanceled);
+		
+		if(!isCanceled){
+			pushItemsToDataBase(items.values());
+		}
 	}
 
 	protected boolean initializeScan(){
@@ -156,6 +163,8 @@ public class EbayScanController extends ScanController implements WebScannerDele
 			categories = Ebay_Cat.getAllCategories();
 			scanLength = categories.size();
 			percentIncrementPerCategory = 10000/scanLength;
+			DatabaseInteractions dbInteract = new DatabaseInteractions();
+			dbConnect = dbInteract.dbConnect();
 			//System.out.println(scanLength);
 			//scanPercent = 0;
 			
@@ -177,11 +186,10 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		//-TODO Alert User of connection timeout. Fail Happy!!!
 	}
 	
-	private boolean pushItemsToDataBase(){
-		DatabaseInteractions dbInteract = new DatabaseInteractions();
-		Connection dbConnect = dbInteract.dbConnect();
+	private boolean pushItemsToDataBase(Collection<Item> items){
 		
-		for(Item item: items.values()){
+		for(Item item: items){
+			DatabaseInteractions dbInteract = new DatabaseInteractions();
 			try {
 				System.out.println(item);
 				dbInteract.addOrUpdateData(dbConnect, item);
@@ -199,8 +207,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		JOptionPane.showMessageDialog(null, errorMessage, error, JOptionPane.ERROR_MESSAGE);
 	}
 	
-	public static void main(String[] args){
-		EbayScanController ebay = new EbayScanController();
-		ebay.alertConnectionTimeOut(null);
+	public void kill(){
+		isCanceled = true;
 	}
 }

@@ -23,6 +23,7 @@ public class ScanningGUI implements ScanDelegate{
 	private JLabel scanLabel;
 	private int sliderValue = 0;
 	private int percentage;
+	private Thread scanThread;
 	/**
 	 * Launch the application.
 	 */
@@ -57,11 +58,13 @@ public class ScanningGUI implements ScanDelegate{
 		initialize();
 		
 		scanController = new EbayScanController(this);
-		new Thread(new Runnable() {
+		scanThread = new Thread(new Runnable() {
 			public void run() {
 				scanController.scan();
 			}
-		}, "scan_process").start(); 
+		}, "scan_process");
+		
+		scanThread.start();
 	}
 
 	/**
@@ -92,14 +95,14 @@ public class ScanningGUI implements ScanDelegate{
 		frmScanInProgress.getContentPane().add(percentLabel);
 		
 		JButton btnCancel = new JButton("Cancel");
+		btnCancel.setBounds(485, 78, 89, 23);
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				frmScanInProgress.setVisible(false);
-				
+				scanController.kill();
+				frmScanInProgress.dispose();
 				
 			}
 		});
-		btnCancel.setBounds(485, 78, 89, 23);
 		frmScanInProgress.getContentPane().add(btnCancel);
 		
 		JButton btnNewButton = new JButton("Ok");
