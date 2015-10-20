@@ -10,9 +10,14 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+
+import edu.mansfield.squirtle_squad.database.DatabaseInteractions;
+
 import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class DBGUI {
@@ -21,6 +26,9 @@ public class DBGUI {
 	private JTextField textField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private final ButtonGroup buttonGroup_1 = new ButtonGroup();
+	public String searchTerm = null;
+	public String searchType = null;
+	public String searchOrder = null;
 
 	/**
 	 * Launch the application.
@@ -49,6 +57,9 @@ public class DBGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		DatabaseInteractions DI = new DatabaseInteractions();
+		Connection conn = DI.dbConnect();
+		
 		frmDataviewgui = new JFrame();
 		frmDataviewgui.setTitle("DataViewGUI");
 		frmDataviewgui.setBounds(100, 100, 600, 500);
@@ -77,13 +88,7 @@ public class DBGUI {
 		frmDataviewgui.getContentPane().add(textField);
 		textField.setColumns(10);
 		
-		JButton btnSearch = new JButton("Search");
-		btnSearch.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			}
-		});
-		btnSearch.setBounds(485, 343, 89, 23);
-		frmDataviewgui.getContentPane().add(btnSearch);
+
 		
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
@@ -99,45 +104,104 @@ public class DBGUI {
 		frmDataviewgui.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Lowest Price");
-		buttonGroup.add(rdbtnNewRadioButton);
-		rdbtnNewRadioButton.setBounds(0, 0, 109, 23);
-		panel.add(rdbtnNewRadioButton);
+		JRadioButton lowPriceRB = new JRadioButton("Lowest Price");
+		buttonGroup.add(lowPriceRB);
+		lowPriceRB.setBounds(0, 0, 109, 23);
+		panel.add(lowPriceRB);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Item ID");
-		buttonGroup.add(rdbtnNewRadioButton_1);
-		rdbtnNewRadioButton_1.setBounds(0, 78, 109, 23);
-		panel.add(rdbtnNewRadioButton_1);
+		JRadioButton itemIdRB = new JRadioButton("Item ID");
+		buttonGroup.add(itemIdRB);
+		itemIdRB.setBounds(0, 78, 109, 23);
+		panel.add(itemIdRB);
 		
-		JRadioButton rdbtnNewRadioButton_2 = new JRadioButton("Highest Price");
-		buttonGroup.add(rdbtnNewRadioButton_2);
-		rdbtnNewRadioButton_2.setBounds(0, 26, 109, 23);
-		panel.add(rdbtnNewRadioButton_2);
+		JRadioButton highPriceRB = new JRadioButton("Highest Price");
+		buttonGroup.add(highPriceRB);
+		highPriceRB.setBounds(0, 26, 109, 23);
+		panel.add(highPriceRB);
 		
-		JRadioButton rdbtnNewRadioButton_4 = new JRadioButton("Item Name");
-		buttonGroup.add(rdbtnNewRadioButton_4);
-		rdbtnNewRadioButton_4.setBounds(0, 52, 109, 23);
-		panel.add(rdbtnNewRadioButton_4);
+		JRadioButton itemNameRB = new JRadioButton("Item Name");
+		buttonGroup.add(itemNameRB);
+		itemNameRB.setBounds(0, 52, 109, 23);
+		panel.add(itemNameRB);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(426, 60, 109, 101);
 		frmDataviewgui.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
-		JRadioButton rdbtnNewRadioButton_3 = new JRadioButton("Bid");
-		buttonGroup_1.add(rdbtnNewRadioButton_3);
-		rdbtnNewRadioButton_3.setBounds(0, 26, 109, 23);
-		panel_1.add(rdbtnNewRadioButton_3);
+		JRadioButton bidRB = new JRadioButton("Bid");
+		buttonGroup_1.add(bidRB);
+		bidRB.setBounds(0, 26, 109, 23);
+		panel_1.add(bidRB);
 		
-		JRadioButton rdbtnNewRadioButton_5 = new JRadioButton("Buy Now");
-		buttonGroup_1.add(rdbtnNewRadioButton_5);
-		rdbtnNewRadioButton_5.setBounds(0, 52, 109, 23);
-		panel_1.add(rdbtnNewRadioButton_5);
+		JRadioButton buyNowRB = new JRadioButton("Buy Now");
+		buttonGroup_1.add(buyNowRB);
+		buyNowRB.setBounds(0, 52, 109, 23);
+		panel_1.add(buyNowRB);
 		
-		JRadioButton rdbtnNewRadioButton_6 = new JRadioButton("All Items");
-		buttonGroup_1.add(rdbtnNewRadioButton_6);
-		rdbtnNewRadioButton_6.setBounds(0, 0, 109, 23);
-		panel_1.add(rdbtnNewRadioButton_6);
+		JRadioButton allItemsRB = new JRadioButton("All Items");
+		buttonGroup_1.add(allItemsRB);
+		allItemsRB.setBounds(0, 0, 109, 23);
+		panel_1.add(allItemsRB);
+		
+		JButton btnSearch = new JButton("Search");
+		btnSearch.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//If statements to determine searchOrder
+				if(lowPriceRB.isSelected()){
+					searchOrder = "price ASC";
+				}
+				else if(highPriceRB.isSelected()){
+					searchOrder = "price DESC";
+
+				}
+				else if(itemIdRB.isSelected()){
+					searchOrder = "id";
+					
+				}
+				else if(itemNameRB.isSelected()){
+					searchOrder = "title";
+				}
+				else{
+					searchOrder = "id";
+				}
+				
+				//If statements to determine searchType
+				if(bidRB.isSelected()){
+					searchType = "true";
+				}
+				else if(buyNowRB.isSelected()){
+					searchType = "false";
+				}
+				else if(allItemsRB.isSelected()){
+					searchType = "";
+				}
+				
+				//Get searchTerm from textField.
+				searchTerm = textField.getText();
+				if(searchTerm.equals("")){
+					searchTerm = "";
+				}
+				else{
+					searchTerm = "\"" + searchTerm + "\"";
+				}
+				
+				
+				//Get data from db and display in textPane.
+				try {
+					//System.out.println("SearchTerm = " + searchTerm + ", searchOrder = " + searchOrder + ", searchType = " + searchType);
+					String data = DI.searchSelect(conn, searchTerm, searchOrder, searchType);
+					System.out.println(data);
+					textPane.setText(data);
+				} catch (SQLException e) {
+					System.out.println("You broked it. Right there --->");
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		btnSearch.setBounds(485, 343, 89, 23);
+		frmDataviewgui.getContentPane().add(btnSearch);
 		
 		JLabel lblNewLabel_1 = new JLabel("Item Type:");
 		lblNewLabel_1.setBounds(431, 39, 89, 14);

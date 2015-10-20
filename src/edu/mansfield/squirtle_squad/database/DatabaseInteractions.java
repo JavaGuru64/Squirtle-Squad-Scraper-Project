@@ -28,10 +28,8 @@ public class DatabaseInteractions {
 
 	public void makeTable(Connection conn) throws SQLException {
 		Statement stmt = null;
-		String sql = "CREATE TABLE EbayData\n" + "(id long NOT NULL PRIMARY KEY,"
-				+ "title varchar(255) NOT NULL,"
-				+ "price DOUBLE PRECISION NOT NULL," + "bidTime long NOT NULL,"
-				+ "isAuction boolean);";
+		String sql = "CREATE TABLE EbayData\n" + "(id long NOT NULL PRIMARY KEY," + "title varchar(255) NOT NULL,"
+				+ "price DOUBLE PRECISION NOT NULL," + "bidTime long NOT NULL," + "isAuction boolean);";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(sql);
 		stmt.close();
@@ -47,27 +45,19 @@ public class DatabaseInteractions {
 	}
 
 	public void insertData(Connection conn, Item item) throws SQLException {
-		//Sanitize item title.
+		// Sanitize item title.
 		String newTitle = item.getTitle();
 		newTitle = newTitle.replaceAll("\"", "");
-		
+
 		Statement stmt = null;
 		stmt = conn.createStatement();
 		int boolValue = 0;
 		if (item.isAuction()) {
 			boolValue = 1;
 		}
-		String sql = "INSERT INTO EbayData (id, title, price, bidTime, isAuction)"
-				+ " VALUES ("
-				+ Long.toString(item.getId())
-				+ ", \""
-				+ newTitle
-				+ "\", "
-				+ Double.toString(item.getPrice())
-				+ ", "
-				+ Long.toString(item.getBidTime())
-				+ ", "
-				+ Integer.toString(boolValue) + ");";
+		String sql = "INSERT INTO EbayData (id, title, price, bidTime, isAuction)" + " VALUES ("
+				+ Long.toString(item.getId()) + ", \"" + newTitle + "\", " + Double.toString(item.getPrice()) + ", "
+				+ Long.toString(item.getBidTime()) + ", " + Integer.toString(boolValue) + ");";
 		stmt.execute(sql);
 		stmt.close();
 	}
@@ -82,7 +72,7 @@ public class DatabaseInteractions {
 		if (ct.next()) {
 			results = ct.getInt(1);
 		}
-		
+
 		itemSet = new Item[results];
 		sql = "SELECT * FROM EbayData;";
 
@@ -112,27 +102,49 @@ public class DatabaseInteractions {
 		stmt.close();
 	}
 
-	public void updateData(Connection conn, Item item, long replaceID)
-			throws SQLException {
+	public void updateData(Connection conn, Item item, long replaceID) throws SQLException {
 		deleteData(conn, replaceID);
 		insertData(conn, item);
 
 	}
-	
-	public void addOrUpdateData(Connection conn, Item item) throws SQLException{
-		// -TODO change to the CASE WHEN sql statement to get rid of thread conflicts.
+
+	public String searchSelect(Connection conn, String searchTerm, String searchOrder, String searchType)
+			throws SQLException {
+		Statement stmt = conn.createStatement();
+		String sql = "SELECT * FROM EbayData ORDER BY id";// WHERE title LIKE " + searchTerm + " AND isAuction ORDER BY " + searchOrder;
+		ResultSet rs = stmt.executeQuery(sql);
+		String returnString = "";
+
+		if (rs != null) {
+			while (rs.next()) {
+				returnString += Long.toString(rs.getLong("id")) + ", " +
+						rs.getString("title") + Double.toString(rs.getDouble("price")) +", " +
+						Long.toString(rs.getLong("bidTime")) +", " +
+						Boolean.toString(rs.getBoolean("isAuction")) + "\n";
+
+			}
+		}
+
+		return returnString;
+	}
+
+	public void addOrUpdateData(Connection conn, Item item) throws SQLException {
+		// -TODO change to the CASE WHEN sql statement to get rid of thread
+		// conflicts.
 		Statement stmt = conn.createStatement();
 		String newTitle = item.getTitle();
 		newTitle = newTitle.replaceAll("\"", "");
-		
-		// String sqlTest = "CASE WHEN (SELECT id FROM EbayData WHERE id=" + item.getID() + ") != NULL"
-		// + " THEN (UPDATE EbayData SET" 
+
+		// String sqlTest = "CASE WHEN (SELECT id FROM EbayData WHERE id=" +
+		// item.getID() + ") != NULL"
+		// + " THEN (UPDATE EbayData SET"
 		// + " title=" + item.getTitle() + ","
 		// + " price=" + item.getPrice() + ","
 		// + " bidTime=" + item.getBidTime() + ","
 		// + " isAuction=" + item.isAuction()
 		// + " WHERE id=" + item.getID()
-		// + " ELSE (INSERT INTO EbayData (id, title, price, bidTime, isAuction)"
+		// + " ELSE (INSERT INTO EbayData (id, title, price, bidTime,
+		// isAuction)"
 		// + " VALUES ("
 		// + Long.toString(item.getId())
 		// + ", \""
@@ -143,15 +155,14 @@ public class DatabaseInteractions {
 		// + Long.toString(item.getBidTime())
 		// + ", "
 		// + Integer.toString(boolValue) + ")) END;"
-		
+
 		String sqlTest = "SELECT id FROM EbayData WHERE id =" + item.getId() + ";";
-		
+
 		ResultSet testResultSet = stmt.executeQuery(sqlTest);
-		
-		
-		if(testResultSet.next()){
+
+		if (testResultSet.next()) {
 			updateData(conn, item, item.getId());
-		}else{
+		} else {
 			insertData(conn, item);
 		}
 	}
