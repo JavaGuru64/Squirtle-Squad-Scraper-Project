@@ -128,8 +128,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 				priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
 				
 				scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
-				delegate.setStatusText(this, "Adjusting Price Range:" + minPrice + "-" + maxPrice
-						+ " | " + scraper.getItemCount() + " Items in range");
 			}
 			
 			priceIncrement = Math.abs(2*(maxPrice - minPrice));
