@@ -1,7 +1,8 @@
 package edu.mansfield.squirtle_squad.delegates;
 
-import edu.mansfield.squirtle_squad.user_interface.ScanningGUI;
+import edu.mansfield.squirtle_squad.user_interface.SubGUI;
 
 public interface StartGUIDelegate {
-	public boolean setLastScanTime(ScanningGUI source, String time);
+	public void releaseSubGUI(SubGUI scanningGUI);
+	public void makeVisable(SubGUI scanningGUI);
 }

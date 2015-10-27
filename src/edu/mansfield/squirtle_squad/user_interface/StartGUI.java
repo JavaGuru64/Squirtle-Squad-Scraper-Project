@@ -8,6 +8,8 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.time.Instant;
@@ -15,10 +17,11 @@ import java.util.Date;
 
 
 
-public class StartGUI{
+public class StartGUI implements StartGUIDelegate{
 
 	private JFrame frmScraperBot;
 	JLabel lblTimetag;
+	ScanningGUI scanGUI;
 
 	/**
 	 * Launch the application.
@@ -47,6 +50,7 @@ public class StartGUI{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		StartGUI startGUIReference = this;
 		frmScraperBot = new JFrame();
 		frmScraperBot.setTitle("Scraper Bot");
 		frmScraperBot.setBounds(100, 100, 340, 242);
@@ -56,8 +60,9 @@ public class StartGUI{
 		JButton btnSubmit = new JButton("Scan");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				lblTimetag.setText(Date.from(Instant.now()).toString());
-				ScanningGUI.main(null);
+				
+				//scanGUI = new ScanningGUI();
+				new ScanningGUI(startGUIReference);
 			}
 		});
 		btnSubmit.setBounds(21, 120, 65, 23);
@@ -85,7 +90,7 @@ public class StartGUI{
 		btnHelp.setBounds(21, 36, 89, 23);
 		frmScraperBot.getContentPane().add(btnHelp);
 		
-		JLabel lblTimeSinceLast = new JLabel("Time since last scan: ");
+		JLabel lblTimeSinceLast = new JLabel("Last scan on: ");
 		lblTimeSinceLast.setBounds(10, 81, 133, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
 		
@@ -116,5 +121,20 @@ public class StartGUI{
 		
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
+	}
+
+	@Override
+	public void releaseSubGUI(SubGUI subGUI) {
+		subGUI = null;
+	}
+
+	@Override
+	public void makeVisable(SubGUI scanningGUI) {
+		lblTimetag.setText(getLastTimeStamp());
+		
+	}
+	
+	private String getLastTimeStamp(){
+		return Date.from(Instant.now()).toString();
 	}
 }

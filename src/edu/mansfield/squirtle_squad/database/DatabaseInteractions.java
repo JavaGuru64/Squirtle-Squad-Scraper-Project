@@ -13,7 +13,7 @@ public class DatabaseInteractions {
 		Connection conn = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:Scraper.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:Resources/Scraper.db");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -107,6 +107,7 @@ public class DatabaseInteractions {
 		insertData(conn, item);
 
 	}
+<<<<<<< HEAD
 
 	public String searchSelect(Connection conn, String searchTerm, String searchOrder, String searchType)
 			throws SQLException {
@@ -165,5 +166,48 @@ public class DatabaseInteractions {
 		} else {
 			insertData(conn, item);
 		}
+=======
+	
+	public void addOrUpdateData(Connection conn, Item item) throws SQLException{
+		// -TODO change to the CASE WHEN sql statement to get rid of thread conflicts.
+		String newTitle = item.getTitle();
+		newTitle = newTitle.replaceAll("\"", "");
+		
+		int boolValue = 0;
+		if (item.isAuction()) {
+			boolValue = 1;
+		}
+		
+		 String sqlTest = "CASE WHEN (SELECT id FROM EbayData WHERE id=" + item.getId() + ") != NULL"
+		 + " THEN (UPDATE EbayData SET" 
+		 + " title=" + item.getTitle() + ","
+		 + " price=" + item.getPrice() + ","
+		 + " bidTime=" + item.getBidTime() + ","
+		 + " isAuction=" + item.isAuction()
+		 + " WHERE id=" + item.getId()
+		 + " ELSE (INSERT INTO EbayData (id, title, price, bidTime, isAuction)"
+		 + " VALUES ("
+		 + Long.toString(item.getId())
+		 + ", \""
+		 + newTitle
+		 + "\", "
+		 + Double.toString(item.getPrice())
+		 + ", "
+		 + Long.toString(item.getBidTime())
+		 + ", "
+		 + Integer.toString(boolValue) + ")) END;";
+		
+		//String sqlTest = "SELECT id FROM EbayData WHERE id =" + item.getId() + ";";
+		
+		Statement stmt = conn.createStatement();
+		System.out.println(stmt.executeUpdate(sqlTest));
+		
+		
+//		if(testResultSet.next()){
+//			updateData(conn, item, item.getId());
+//		}else{
+//			insertData(conn, item);
+//		}
+>>>>>>> Scan-Cancel-Testing
 	}
 }

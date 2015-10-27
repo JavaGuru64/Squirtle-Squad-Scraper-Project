@@ -6,4 +6,5 @@ public interface ScanDelegate {
 	public boolean setScanPercentage(WebScannerDelegate source, int percentage);
 	public boolean setTimeUntilFinished(WebScannerDelegate source, int timeInSeconds);
 	public boolean setStatusText(WebScannerDelegate source, String text);
+	public boolean scanEndedCleanup(WebScannerDelegate source);
 }
