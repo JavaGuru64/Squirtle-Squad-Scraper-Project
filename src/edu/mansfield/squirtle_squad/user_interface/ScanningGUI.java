@@ -89,7 +89,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 		frmScanInProgress.getContentPane().setLayout(null);
 		
 		scanLabel = new JLabel("Scanning: Initializing Scan...");
-		scanLabel.setBounds(10, 11, 550, 14);
+		scanLabel.setBounds(10, 11, 1000, 14);
 		frmScanInProgress.getContentPane().add(scanLabel);
 		
 		slider = new JSlider();
