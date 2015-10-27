@@ -52,6 +52,8 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 	 */
 	public ScanningGUI() {
 		initialize();
+		frmScanInProgress.setVisible(true);
+		
 		scanThread = new Thread(new Runnable() {
 			public void run() {
 				scanController.scan();
@@ -59,7 +61,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 		}, "scan_process");
 		//scanThread.setPriority(Thread.MAX_PRIORITY);
 		scanThread.start(); 
-		this.frmScanInProgress.setVisible(true);
+		
 	}
 	
 	public ScanningGUI(StartGUIDelegate delegate) {
@@ -161,20 +163,21 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 
 	@Override
 	public boolean scanEndedCleanup(WebScannerDelegate source) {
-		setTimeStampDate();
+		
 		if(startGUI != null){
 			//startGUI.releaseSubGUI(this);
+			frmScanInProgress.setVisible(false);
 			try{
 				scanThread.join();
 			}catch(InterruptedException e){
 				e.printStackTrace();
 			}
 			startGUI.makeVisable(this);
-			frmScanInProgress.dispose();
+			
 		}else{
 			System.exit(0);
 		}
-
+		setTimeStampDate();
 		return false;
 	}
 

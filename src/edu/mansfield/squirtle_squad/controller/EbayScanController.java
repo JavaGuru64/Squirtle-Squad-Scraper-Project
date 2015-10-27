@@ -219,7 +219,7 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		scanPercent = percentIncrementPerCategory * catagoriesScanned;
 		if(scanPercent >= 100){
 			delegate.setScanPercentage(this, (int) 100 * 100);
-			kill();
+			endScan();
 		}
 		else{
 			delegate.setScanPercentage(this, (int) (scanPercent * 100));

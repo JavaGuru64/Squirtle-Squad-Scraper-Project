@@ -61,7 +61,7 @@ public class StartGUI implements StartGUIDelegate{
 		JButton btnSubmit = new JButton("Scan");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				frmScraperBot.setVisible(false);
 				//scanGUI = new ScanningGUI();
 				new ScanningGUI(startGUIReference);
 			}
@@ -132,6 +132,7 @@ public class StartGUI implements StartGUIDelegate{
 	@Override
 	public void makeVisable(SubGUI scanningGUI) {
 		lblTimetag.setText(getLastTimeStamp());
+		frmScraperBot.setVisible(true);
 	}
 	
 	private String getLastTimeStamp(){
