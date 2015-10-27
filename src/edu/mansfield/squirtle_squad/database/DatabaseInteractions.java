@@ -111,7 +111,7 @@ public class DatabaseInteractions {
 	public String searchSelect(Connection conn, String searchTerm, String searchOrder, String searchType)
 			throws SQLException {
 		Statement stmt = conn.createStatement();
-		String sql = "SELECT * FROM EbayData ORDER BY id";// WHERE title LIKE " + searchTerm + " AND isAuction ORDER BY " + searchOrder;
+		String sql = "SELECT * FROM EbayData ORDER BY id LIMIT 1000;";// WHERE title LIKE " + searchTerm + " AND isAuction ORDER BY " + searchOrder;
 		ResultSet rs = stmt.executeQuery(sql);
 		String returnString = "";
 

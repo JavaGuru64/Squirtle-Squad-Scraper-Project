@@ -51,9 +51,9 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	public void scan() {
 		
 			ArrayList<Thread> threads = new ArrayList<Thread>();
-			EbayScanController referenceToThis = this;
+			final EbayScanController referenceToThis = this;
 			
-			for(String categoryURL: categories){
+			for(final String categoryURL: categories){
 				
 				Thread aThread = new Thread(new Runnable(){
 					@Override

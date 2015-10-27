@@ -57,8 +57,8 @@ public class DBGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		DatabaseInteractions DI = new DatabaseInteractions();
-		Connection conn = DI.dbConnect();
+		final DatabaseInteractions DI = new DatabaseInteractions();
+		final Connection conn = DI.dbConnect();
 		
 		frmDataviewgui = new JFrame();
 		frmDataviewgui.setTitle("DataViewGUI");
@@ -72,7 +72,7 @@ public class DBGUI {
 		scrollPane_1.setBounds(10, 11, 299, 440);
 		frmDataviewgui.getContentPane().add(scrollPane_1);
 		
-		JTextPane textPane = new JTextPane();
+		final JTextPane textPane = new JTextPane();
 		scrollPane_1.setViewportView(textPane);
 		
 		JLabel lblSearch = new JLabel("Search:");
@@ -104,22 +104,22 @@ public class DBGUI {
 		frmDataviewgui.getContentPane().add(panel);
 		panel.setLayout(null);
 		
-		JRadioButton lowPriceRB = new JRadioButton("Lowest Price");
+		final JRadioButton lowPriceRB = new JRadioButton("Lowest Price");
 		buttonGroup.add(lowPriceRB);
 		lowPriceRB.setBounds(0, 0, 109, 23);
 		panel.add(lowPriceRB);
 		
-		JRadioButton itemIdRB = new JRadioButton("Item ID");
+		final JRadioButton itemIdRB = new JRadioButton("Item ID");
 		buttonGroup.add(itemIdRB);
 		itemIdRB.setBounds(0, 78, 109, 23);
 		panel.add(itemIdRB);
 		
-		JRadioButton highPriceRB = new JRadioButton("Highest Price");
+		final JRadioButton highPriceRB = new JRadioButton("Highest Price");
 		buttonGroup.add(highPriceRB);
 		highPriceRB.setBounds(0, 26, 109, 23);
 		panel.add(highPriceRB);
 		
-		JRadioButton itemNameRB = new JRadioButton("Item Name");
+		final JRadioButton itemNameRB = new JRadioButton("Item Name");
 		buttonGroup.add(itemNameRB);
 		itemNameRB.setBounds(0, 52, 109, 23);
 		panel.add(itemNameRB);
@@ -129,17 +129,17 @@ public class DBGUI {
 		frmDataviewgui.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
-		JRadioButton bidRB = new JRadioButton("Bid");
+		final JRadioButton bidRB = new JRadioButton("Bid");
 		buttonGroup_1.add(bidRB);
 		bidRB.setBounds(0, 26, 109, 23);
 		panel_1.add(bidRB);
 		
-		JRadioButton buyNowRB = new JRadioButton("Buy Now");
+		final JRadioButton buyNowRB = new JRadioButton("Buy Now");
 		buttonGroup_1.add(buyNowRB);
 		buyNowRB.setBounds(0, 52, 109, 23);
 		panel_1.add(buyNowRB);
 		
-		JRadioButton allItemsRB = new JRadioButton("All Items");
+		final JRadioButton allItemsRB = new JRadioButton("All Items");
 		buttonGroup_1.add(allItemsRB);
 		allItemsRB.setBounds(0, 0, 109, 23);
 		panel_1.add(allItemsRB);
