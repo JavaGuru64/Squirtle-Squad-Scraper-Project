@@ -58,7 +58,7 @@ public class HelpGUI {
 		frmHelpMe = new JFrame();
 		frmHelpMe.setTitle("Help Me!");
 		frmHelpMe.setBounds(100, 100, 450, 340);
-		frmHelpMe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//frmHelpMe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmHelpMe.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane = new JScrollPane();

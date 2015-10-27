@@ -29,7 +29,7 @@ import javax.swing.JOptionPane;
 public class EbayScanController extends ScanController implements WebScannerDelegate {
 	
 	final int ITEMS_PER_PAGE = 10000;
-	final double ACTUAL_PERCENTAGE_TO_DOWNLOAD_ALMOST = .05;
+	final double ACTUAL_PERCENTAGE_TO_DOWNLOAD_ALMOST = .25;
 	
 	private ArrayList<String> categories;
 	private int scanLength; 

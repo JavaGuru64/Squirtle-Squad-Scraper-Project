@@ -55,7 +55,7 @@ public class StartGUI implements StartGUIDelegate{
 		final StartGUI startGUIReference = this;
 		frmScraperBot = new JFrame();
 		frmScraperBot.setTitle("Scraper Bot");
-		frmScraperBot.setBounds(100, 100, 397, 295);
+		frmScraperBot.setBounds(100, 100, 450, 295);
 		frmScraperBot.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScraperBot.getContentPane().setLayout(null);
 		
@@ -80,7 +80,7 @@ public class StartGUI implements StartGUIDelegate{
 		frmScraperBot.getContentPane().add(btnCancel);
 		
 		JLabel lblWelcomeToThe = new JLabel("Welcome to the site scraper bot, for all your scraping needs!");
-		lblWelcomeToThe.setBounds(10, 11, 371, 14);
+		lblWelcomeToThe.setBounds(10, 11, 400, 14);
 		frmScraperBot.getContentPane().add(lblWelcomeToThe);
 		
 		JButton btnHelp = new JButton("Help");
