@@ -21,7 +21,6 @@ public class StartGUI implements StartGUIDelegate{
 
 	private File timeStamp = new File("Resources/TimeStamp");
 	private JFrame frmScraperBot;
-	JLabel lblTimetag;
 	ScanningGUI scanGUI;
 
 	/**
@@ -92,12 +91,8 @@ public class StartGUI implements StartGUIDelegate{
 		frmScraperBot.getContentPane().add(btnHelp);
 		
 		JLabel lblTimeSinceLast = new JLabel(getLastTimeStamp());
-		lblTimeSinceLast.setBounds(108, 118, 155, 14);
+		lblTimeSinceLast.setBounds(10, 122, 361, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
-		
-		lblTimetag = new JLabel("TimeTag");
-		lblTimetag.setBounds(10, 118, 168, 14);
-		frmScraperBot.getContentPane().add(lblTimetag);
 		
 		JButton btnViewdb = new JButton("ViewDB");
 		btnViewdb.addActionListener(new ActionListener() {
