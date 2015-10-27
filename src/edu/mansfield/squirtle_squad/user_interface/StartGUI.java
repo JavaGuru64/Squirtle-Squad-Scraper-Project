@@ -54,7 +54,7 @@ public class StartGUI implements StartGUIDelegate{
 		final StartGUI startGUIReference = this;
 		frmScraperBot = new JFrame();
 		frmScraperBot.setTitle("Scraper Bot");
-		frmScraperBot.setBounds(100, 100, 340, 242);
+		frmScraperBot.setBounds(100, 100, 397, 295);
 		frmScraperBot.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScraperBot.getContentPane().setLayout(null);
 		
@@ -66,7 +66,7 @@ public class StartGUI implements StartGUIDelegate{
 				new ScanningGUI(startGUIReference);
 			}
 		});
-		btnSubmit.setBounds(21, 120, 65, 23);
+		btnSubmit.setBounds(108, 202, 65, 23);
 		frmScraperBot.getContentPane().add(btnSubmit);
 		
 		JButton btnCancel = new JButton("Cancel");
@@ -75,7 +75,7 @@ public class StartGUI implements StartGUIDelegate{
 				System.exit(0);
 			}
 		});
-		btnCancel.setBounds(209, 120, 89, 23);
+		btnCancel.setBounds(282, 202, 89, 23);
 		frmScraperBot.getContentPane().add(btnCancel);
 		
 		JLabel lblWelcomeToThe = new JLabel("Welcome to the site scraper bot, for all your scraping needs!");
@@ -92,11 +92,11 @@ public class StartGUI implements StartGUIDelegate{
 		frmScraperBot.getContentPane().add(btnHelp);
 		
 		JLabel lblTimeSinceLast = new JLabel(getLastTimeStamp());
-		lblTimeSinceLast.setBounds(10, 81, 133, 14);
+		lblTimeSinceLast.setBounds(108, 118, 155, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
 		
 		lblTimetag = new JLabel("TimeTag");
-		lblTimetag.setBounds(144, 81, 65, 14);
+		lblTimetag.setBounds(10, 118, 168, 14);
 		frmScraperBot.getContentPane().add(lblTimetag);
 		
 		JButton btnViewdb = new JButton("ViewDB");
@@ -105,7 +105,7 @@ public class StartGUI implements StartGUIDelegate{
 				DBGUI.main(null);
 			}
 		});
-		btnViewdb.setBounds(105, 120, 89, 23);
+		btnViewdb.setBounds(183, 202, 89, 23);
 		frmScraperBot.getContentPane().add(btnViewdb);
 		
 		JMenuBar menuBar = new JMenuBar();
