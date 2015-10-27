@@ -21,7 +21,7 @@ public class DatabaseInteractions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		;
+		
 		return conn;
 
 	}
@@ -129,7 +129,6 @@ public class DatabaseInteractions {
 	}
 	
 	public void addOrUpdateData(Connection conn, Item item) throws SQLException{
-		// -TODO change to the CASE WHEN sql statement to get rid of thread conflicts.
 		String newTitle = item.getTitle();
 		newTitle = newTitle.replaceAll("\"", "");
 		
@@ -138,14 +137,7 @@ public class DatabaseInteractions {
 			boolValue = 1;
 		}
 		
-		 String sqlTest = "CASE WHEN (SELECT id FROM EbayData WHERE id=" + item.getId() + ") != NULL"
-		 + " THEN (UPDATE EbayData SET" 
-		 + " title=" + item.getTitle() + ","
-		 + " price=" + item.getPrice() + ","
-		 + " bidTime=" + item.getBidTime() + ","
-		 + " isAuction=" + item.isAuction()
-		 + " WHERE id=" + item.getId()
-		 + " ELSE (INSERT INTO EbayData (id, title, price, bidTime, isAuction)"
+		String sqlTest = "INSERT OR REPLACE INTO EbayData (id, title, price, bidTime, isAuction)"
 		 + " VALUES ("
 		 + Long.toString(item.getId())
 		 + ", \""
@@ -155,12 +147,10 @@ public class DatabaseInteractions {
 		 + ", "
 		 + Long.toString(item.getBidTime())
 		 + ", "
-		 + Integer.toString(boolValue) + ")) END;";
-		
-		//String sqlTest = "SELECT id FROM EbayData WHERE id =" + item.getId() + ";";
+		 + Integer.toString(boolValue) + ");";
 		
 		Statement stmt = conn.createStatement();
-		System.out.println(stmt.executeUpdate(sqlTest));
+		stmt.executeUpdate(sqlTest);
 		
 	}
 }

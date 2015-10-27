@@ -12,13 +12,16 @@ import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.Instant;
 import java.util.Date;
-
+import java.util.Scanner;
 
 
 public class StartGUI implements StartGUIDelegate{
 
+	private File timeStamp = new File("Resources/TimeStamp");
 	private JFrame frmScraperBot;
 	JLabel lblTimetag;
 	ScanningGUI scanGUI;
@@ -90,7 +93,7 @@ public class StartGUI implements StartGUIDelegate{
 		btnHelp.setBounds(21, 36, 89, 23);
 		frmScraperBot.getContentPane().add(btnHelp);
 		
-		JLabel lblTimeSinceLast = new JLabel("Last scan on: ");
+		JLabel lblTimeSinceLast = new JLabel(getLastTimeStamp());
 		lblTimeSinceLast.setBounds(10, 81, 133, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
 		
@@ -131,10 +134,24 @@ public class StartGUI implements StartGUIDelegate{
 	@Override
 	public void makeVisable(SubGUI scanningGUI) {
 		lblTimetag.setText(getLastTimeStamp());
-		
 	}
 	
 	private String getLastTimeStamp(){
-		return Date.from(Instant.now()).toString();
+		String timeStampText = "Last scan on: ";
+		try {
+			Scanner sc = new Scanner(timeStamp);
+			while(sc.hasNext()){
+				timeStampText += sc.nextLine();
+			}
+			sc.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		
+		if(timeStampText.equals("Last scan on: ")){
+			timeStampText += "NEVER!!!";
+		}
+		
+		return timeStampText;
 	}
 }

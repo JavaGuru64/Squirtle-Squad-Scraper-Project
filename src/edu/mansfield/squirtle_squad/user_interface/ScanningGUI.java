@@ -13,6 +13,12 @@ import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.time.Instant;
+import java.util.Date;
 
 public class ScanningGUI extends SubGUI implements ScanDelegate{
 	EbayScanController scanController = new EbayScanController(this);
@@ -51,7 +57,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 				scanController.scan();
 			}
 		}, "scan_process");
-		scanThread.setPriority(Thread.MAX_PRIORITY);
+		//scanThread.setPriority(Thread.MAX_PRIORITY);
 		scanThread.start(); 
 		this.frmScanInProgress.setVisible(true);
 	}
@@ -109,18 +115,18 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 		});
 		frmScanInProgress.getContentPane().add(btnCancel);
 		
-		JButton btnNewButton = new JButton("Ok");
-		btnNewButton.setBounds(485, 49, 89, 23);
-		btnNewButton.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent arg0){
-				if(percentLabel.getText().equals("100%")){
-				frmScanInProgress.setVisible(false);	
-				DBGUI.main(null);
-				}
-				
-			}
-		});
-		frmScanInProgress.getContentPane().add(btnNewButton);
+//		JButton btnNewButton = new JButton("Ok");
+//		btnNewButton.setBounds(485, 49, 89, 23);
+//		btnNewButton.addActionListener(new ActionListener(){
+//			public void actionPerformed(ActionEvent arg0){
+//				if(percentLabel.getText().equals("100%")){
+//				frmScanInProgress.setVisible(false);	
+//				DBGUI.main(null);
+//				}
+//				
+//			}
+//		});
+//		frmScanInProgress.getContentPane().add(btnNewButton);
 	}
 
 	@Override
@@ -157,7 +163,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 	public boolean scanEndedCleanup(WebScannerDelegate source) {
 		setTimeStampDate();
 		if(startGUI != null){
-			startGUI.releaseSubGUI(this);
+			//startGUI.releaseSubGUI(this);
 			try{
 				scanThread.join();
 			}catch(InterruptedException e){
@@ -173,13 +179,10 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 	}
 
 	private void setTimeStampDate() {
-		try{
-			
-		}catch(Exception e){
-			
-		}
-		
+		try(Writer writer = new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream("Resources/TimeStamp"), "utf-8"))){
+			writer.write(Date.from(Instant.now()).toString());
+		}catch(Exception e){}
 	}
-
 
 }
