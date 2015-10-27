@@ -49,124 +49,60 @@ public class EbayScanController extends ScanController implements WebScannerDele
 
 
 	public void scan() {
-		try{
+		
 			ArrayList<Thread> threads = new ArrayList<Thread>();
 			EbayScanController referenceToThis = this;
+			
 			for(String categoryURL: categories){
+				
 				Thread aThread = new Thread(new Runnable(){
 					@Override
 					public void run(){
 						try{
 							scanCategory(new String(categoryURL));
 						}
-						catch(IOException exception){
-							exception.printStackTrace();
-							System.out.println("This is a Problem!");
+						catch(Exception e){
+							e.printStackTrace();
 						}
 						if(!isCanceled){
 							delegate.incrementScanPercentage(referenceToThis, percentIncrementPerCategory);
-						}
-					}
-					
-					public void scanCategory(String categoryURL) throws IOException{
-						EbayScraper scraper;
-						int numberOfItemsInCategory;
-						int itemsDownloaded;
-						int minPrice;
-						int maxPrice;
-						int priceIncrement;
-						
-						String url = categoryURL;
-						itemsDownloaded = 0;
-						minPrice = 0;
-						maxPrice = 10;
-						priceIncrement = maxPrice - minPrice;
-						
-						if(!isCanceled){
-							scraper = new EbayScraper( referenceToThis, url);
-							numberOfItemsInCategory = scraper.getItemCount();
-						}else{
-							numberOfItemsInCategory = 0;
-						}
-						
-						//delegate.setStatusText(referenceToThis, "Downloading: " + categoryURL);
-						
-						String priceRange = "";
-						int maxPriceDividor = 0;
-						// Begin the scraping process for the current category
-						
-						System.out.println("This is not a Problem!");
-						while(itemsDownloaded < numberOfItemsInCategory && !isCanceled){
-							System.out.println(categoryURL + " says that isCanceled is " + isCanceled);
-							priceRange = "";
-							maxPriceDividor = 0;
-							
-							if(!isCanceled){
-								scraper = new EbayScraper(referenceToThis, url);
-								while(scraper.getItemCount() > 10000 &&  maxPrice < 1000000000 && !isCanceled){
-									maxPriceDividor++;
-									
-									maxPrice = (minPrice + priceIncrement)/maxPriceDividor;
-									if(maxPrice <= minPrice){
-										maxPrice = minPrice + 10;
-										break;
-									}
-									
-									priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
-									if(!isCanceled){
-										scraper = new EbayScraper(referenceToThis, url + "?_png=1" + priceRange);
-										System.out.println(categoryURL + ": Checking Price Range!");
-									}
-								}
-							}
-							
-							priceIncrement = Math.abs(2*(maxPrice - minPrice));
-							minPrice = maxPrice;
-							
-							if(!isCanceled){
-								scraper = new EbayScraper(referenceToThis, url + "?_png=1" + priceRange);
-								delegate.setStatusText(referenceToThis, "Downloading: " + url + "?_png=1" + priceRange);
-								pushItemsToDataBase(scraper.getItemsListed());
-								itemsDownloaded += scraper.getItemCount();
-								System.out.println(categoryURL + ": Downloaded");
-							}
-							
-						// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
-						}
-						
-						if(isCanceled){
-							delegate.setStatusText(referenceToThis, "Canceling...");
 						}
 					}
 				}, categoryURL);
 				
 				aThread.setPriority(Thread.MAX_PRIORITY);
 				aThread.start();
-				
 				threads.add(aThread);
+				
 			}
 			
 			boolean threadsAreAlive;
+			
 			do{
 				threadsAreAlive = false;
-				
 				for(Thread thread: threads){
 					//System.out.println(thread.getName()+ ": " + (thread.isAlive()?" is alive": " is dead"));
 					if(thread.isAlive()){
 						threadsAreAlive = true;
 					}
 				}
-				//Thread.sleep(1000);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}while(threadsAreAlive && !isCanceled);
 			
 			for(Thread thread: threads){
-				thread.join();
-				System.out.println("I'm Dying");
+				try {
+					System.out.println(thread.getName()+ ": " + (thread.isAlive()?" is alive": " is dead"));
+					thread.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		}catch(Exception e){
-			e.printStackTrace();
-			// -TODO Fail nice
-		}
+
 		delegate.scanEndedCleanup(this);
 	}
 
@@ -192,6 +128,83 @@ public class EbayScanController extends ScanController implements WebScannerDele
 		return true;
 	}
 	
+	public void scanCategory(String categoryURL) throws Exception{
+		EbayScraper scraper = null;
+		int numberOfItemsInCategory;
+		int itemsDownloaded;
+		int minPrice;
+		int maxPrice;
+		int priceIncrement;
+		
+		String url = categoryURL;
+		itemsDownloaded = 0;
+		minPrice = 0;
+		maxPrice = 10;
+		priceIncrement = maxPrice - minPrice;
+		
+		if(!isCanceled){
+			scraper = new EbayScraper(this, url);
+			numberOfItemsInCategory = scraper.getItemCount();
+		}else{
+			numberOfItemsInCategory = -1;
+		}
+		
+		String priceRange = "";
+		int maxPriceDividor = 0;
+		
+		
+		// Begin the scraping process for the current category
+		while(itemsDownloaded < numberOfItemsInCategory &&  minPrice < 1000000000 && !isCanceled){
+			//System.out.println(categoryURL + " says that isCanceled is " + isCanceled);
+			priceRange = "&rt=nc";
+			maxPriceDividor = 1;
+			
+			if(!isCanceled){
+				while(numberOfItemsInCategory > 10000 && scraper.getItemCount() > 10000 &&  maxPrice < 1000000000 && maxPriceDividor < priceIncrement && !isCanceled){
+					
+					maxPrice = minPrice + priceIncrement/maxPriceDividor;
+					maxPriceDividor *= 2;
+					
+					if(maxPrice <= minPrice){
+						maxPrice = minPrice + 1;
+						break;
+					}
+					
+					priceRange = "&_mPrRngCbx=1&_udlo=" + minPrice + "&_udhi=" + maxPrice + "&rt=nc";
+					if(!isCanceled){
+						scraper = new EbayScraper(this, url + "?_png=1" + priceRange);
+						//System.out.println(categoryURL + ": Checking Price Range!" + minPrice  + "-" + maxPrice);
+					}
+				}
+			
+				if(maxPrice > minPrice){
+					priceIncrement = Math.abs(10*(maxPrice - minPrice));
+				}else{
+					priceIncrement = 10;
+				}
+				minPrice = maxPrice;
+			
+				if(!isCanceled){
+					delegate.setStatusText(this, "Downloading: " + url + "?_png=1" + priceRange);
+				}
+				
+				if(!pushItemsToDataBase(scraper.getItemsListed())){
+					// may want to add a flag for throwing an alert error 
+					// box stating lost DB Connection if not canceled
+					// Do not add here or you could get potentially 460 error boxes
+					return;
+				}
+				itemsDownloaded += scraper.getItemCount();
+				//System.out.println(categoryURL + ": Downloaded");
+			}
+			
+		}// WE WON'T STOP UNTIL ALL YOUR DATUM IS BELONG TO US.
+		
+		if(isCanceled){
+			delegate.setStatusText(this, "Canceling...");
+		}
+	}
+	
 	public void alertConnectionTimeOut(Scraper source){
 		showAlertErrorBox("Connection Timeout", "Your connection timed out.\n"
 				+ "Please, check to make sure you are connected to the internet and try again.");
@@ -201,18 +214,21 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	private boolean pushItemsToDataBase(Collection<Item> items){
 		
 		for(Item item: items){
-			DatabaseInteractions dbInteract = new DatabaseInteractions();
-			try {
-				//System.out.println(item);
-				dbInteract.addOrUpdateData(dbConnect, item);
-			} catch (SQLException e) {
-				//e.printStackTrace();
-				// Thread conflic usually;
-				// Perhaps
-				return false;
+			if(!isCanceled){
+				DatabaseInteractions dbInteract = new DatabaseInteractions();
+				try {
+					//System.out.println(item);
+					dbInteract.addOrUpdateData(dbConnect, item);
+				} catch (SQLException e) {
+					// Thread conflict usually, but if there is no connection 
+					// we are probably canceling or failing splendidly
+					if(dbConnect == null){
+						System.out.println("NULL CONNECTION!!!");
+						return false;
+					}
+				}
 			}
 		}
-		
 		return true;
 	}
 	
@@ -222,5 +238,6 @@ public class EbayScanController extends ScanController implements WebScannerDele
 	
 	public void kill(){
 		isCanceled = true;
+		dbConnect = null;
 	}
 }

@@ -59,7 +59,7 @@ public class EbayScraper extends Scraper{
 			//System.out.println(++i);
 			long id = Long.parseLong(el.attr("listingid"));
 			String title = el.select("a.vip").get(0).text();
-			double price = DataFormatter.doubleFromPriceString(el.select("li.lvprice").get(0).text());
+			double price = DataFormatter.doubleFromPriceString(el.select("li.lvprice").get(0).select("span.bold").get(0).text());
 			long time = 0;
 			boolean isAuction = false;
 			try{
@@ -67,9 +67,7 @@ public class EbayScraper extends Scraper{
 				time = Long.parseLong(elm.attr("timems"));
 				isAuction = true;
 			}
-			catch(IndexOutOfBoundsException exception){
-				
-			}
+			catch(IndexOutOfBoundsException exception){}
 			
 			itemsOnPage.add(new Item(id, title, price, time, isAuction));
 		}

@@ -60,7 +60,7 @@ public class StartGUI implements StartGUIDelegate{
 		JButton btnSubmit = new JButton("Scan");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				lblTimetag.setText(Date.from(Instant.now()).toString());
+				
 				//scanGUI = new ScanningGUI();
 				new ScanningGUI(startGUIReference);
 			}
@@ -124,8 +124,17 @@ public class StartGUI implements StartGUIDelegate{
 	}
 
 	@Override
-	public void releaseSubGUIs(SubGUI subGUI) {
-		
+	public void releaseSubGUI(SubGUI subGUI) {
 		subGUI = null;
+	}
+
+	@Override
+	public void makeVisable(SubGUI scanningGUI) {
+		lblTimetag.setText(getLastTimeStamp());
+		
+	}
+	
+	private String getLastTimeStamp(){
+		return Date.from(Instant.now()).toString();
 	}
 }

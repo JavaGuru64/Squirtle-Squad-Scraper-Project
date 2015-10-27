@@ -57,6 +57,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 	}
 	
 	public ScanningGUI(StartGUIDelegate delegate) {
+		startGUI = delegate;
 		initialize();
 		scanController = new EbayScanController(this);
 		scanThread = new Thread(new Runnable() {
@@ -154,22 +155,30 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 
 	@Override
 	public boolean scanEndedCleanup(WebScannerDelegate source) {
+		setTimeStampDate();
 		if(startGUI != null){
-			startGUI.releaseSubGUIs(this);
-			while(scanThread.isAlive()){
-				try{
-					scanThread.join();
-				}catch(InterruptedException e){
-					e.printStackTrace();
-				}
+			startGUI.releaseSubGUI(this);
+			try{
+				scanThread.join();
+			}catch(InterruptedException e){
+				e.printStackTrace();
 			}
-			startGUI = null;
+			startGUI.makeVisable(this);
 			frmScanInProgress.dispose();
 		}else{
 			System.exit(0);
 		}
 
 		return false;
+	}
+
+	private void setTimeStampDate() {
+		try{
+			
+		}catch(Exception e){
+			
+		}
+		
 	}
 
 
