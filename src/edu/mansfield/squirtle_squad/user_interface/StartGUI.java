@@ -50,7 +50,7 @@ public class StartGUI implements StartGUIDelegate{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		StartGUI startGUIReference = this;
+		final StartGUI startGUIReference = this;
 		frmScraperBot = new JFrame();
 		frmScraperBot.setTitle("Scraper Bot");
 		frmScraperBot.setBounds(100, 100, 340, 242);
