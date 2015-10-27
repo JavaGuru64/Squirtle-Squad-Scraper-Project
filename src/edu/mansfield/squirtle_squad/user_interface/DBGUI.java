@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
 import edu.mansfield.squirtle_squad.database.DatabaseInteractions;
+import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
 
 import javax.swing.JButton;
 
@@ -20,7 +21,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
-public class DBGUI {
+public class DBGUI extends SubGUI{
 
 	private JFrame frmDataviewgui;
 	private JTextField textField;
@@ -29,6 +30,7 @@ public class DBGUI {
 	public String searchTerm = null;
 	public String searchType = null;
 	public String searchOrder = null;
+	private StartGUIDelegate startGUI;
 
 	/**
 	 * Launch the application.
@@ -51,6 +53,13 @@ public class DBGUI {
 	 */
 	public DBGUI() {
 		initialize();
+		frmDataviewgui.setVisible(true);
+	}
+	
+	public DBGUI(StartGUIDelegate startGUI) {
+		this.startGUI = startGUI;
+		initialize();
+		frmDataviewgui.setVisible(true);
 	}
 
 	/**
@@ -89,11 +98,12 @@ public class DBGUI {
 		textField.setColumns(10);
 		
 
-		
+		SubGUI thisReference = this;
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmDataviewgui.setVisible(false);
+				startGUI.makeVisable(thisReference);
 			}
 		});
 		btnCancel.setBounds(594, 538, 89, 23);

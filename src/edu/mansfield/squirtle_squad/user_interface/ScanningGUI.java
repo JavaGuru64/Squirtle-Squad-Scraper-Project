@@ -60,22 +60,22 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 			}
 		}, "scan_process");
 		//scanThread.setPriority(Thread.MAX_PRIORITY);
-		scanThread.start(); 
-		
+		scanThread.start();
 	}
 	
 	public ScanningGUI(StartGUIDelegate delegate) {
 		startGUI = delegate;
 		initialize();
-		scanController = new EbayScanController(this);
+		frmScanInProgress.setVisible(true);
+		
+		//Im a run away thread. YAY!!!
 		scanThread = new Thread(new Runnable() {
 			public void run() {
 				scanController.scan();
 			}
 		}, "scan_process");
-		
-		scanThread.start();
-		this.frmScanInProgress.setVisible(true);
+		//scanThread.setPriority(Thread.MAX_PRIORITY);
+		scanThread.start(); 
 	}
 
 	/**
@@ -167,13 +167,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate{
 		if(startGUI != null){
 			//startGUI.releaseSubGUI(this);
 			frmScanInProgress.setVisible(false);
-			try{
-				scanThread.join();
-			}catch(InterruptedException e){
-				e.printStackTrace();
-			}
 			startGUI.makeVisable(this);
-			
 		}else{
 			System.exit(0);
 		}
