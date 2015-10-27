@@ -191,7 +191,7 @@ public class DBGUI {
 				try {
 					//System.out.println("SearchTerm = " + searchTerm + ", searchOrder = " + searchOrder + ", searchType = " + searchType);
 					String data = DI.searchSelect(conn, searchTerm, searchOrder, searchType);
-					System.out.println(data);
+					//System.out.println(data);
 					textPane.setText(data);
 				} catch (SQLException e) {
 					System.out.println("You broked it. Right there --->");

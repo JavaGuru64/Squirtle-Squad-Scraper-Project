@@ -14,8 +14,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.Instant;
-import java.util.Date;
 import java.util.Scanner;
 
 
@@ -53,7 +51,7 @@ public class StartGUI implements StartGUIDelegate{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		StartGUI startGUIReference = this;
+		final StartGUI startGUIReference = this;
 		frmScraperBot = new JFrame();
 		frmScraperBot.setTitle("Scraper Bot");
 		frmScraperBot.setBounds(100, 100, 340, 242);
