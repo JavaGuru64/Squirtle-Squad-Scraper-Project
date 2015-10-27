@@ -107,7 +107,6 @@ public class DatabaseInteractions {
 		insertData(conn, item);
 
 	}
-<<<<<<< HEAD
 
 	public String searchSelect(Connection conn, String searchTerm, String searchOrder, String searchType)
 			throws SQLException {
@@ -128,45 +127,6 @@ public class DatabaseInteractions {
 
 		return returnString;
 	}
-
-	public void addOrUpdateData(Connection conn, Item item) throws SQLException {
-		// -TODO change to the CASE WHEN sql statement to get rid of thread
-		// conflicts.
-		Statement stmt = conn.createStatement();
-		String newTitle = item.getTitle();
-		newTitle = newTitle.replaceAll("\"", "");
-
-		// String sqlTest = "CASE WHEN (SELECT id FROM EbayData WHERE id=" +
-		// item.getID() + ") != NULL"
-		// + " THEN (UPDATE EbayData SET"
-		// + " title=" + item.getTitle() + ","
-		// + " price=" + item.getPrice() + ","
-		// + " bidTime=" + item.getBidTime() + ","
-		// + " isAuction=" + item.isAuction()
-		// + " WHERE id=" + item.getID()
-		// + " ELSE (INSERT INTO EbayData (id, title, price, bidTime,
-		// isAuction)"
-		// + " VALUES ("
-		// + Long.toString(item.getId())
-		// + ", \""
-		// + newTitle
-		// + "\", "
-		// + Double.toString(item.getPrice())
-		// + ", "
-		// + Long.toString(item.getBidTime())
-		// + ", "
-		// + Integer.toString(boolValue) + ")) END;"
-
-		String sqlTest = "SELECT id FROM EbayData WHERE id =" + item.getId() + ";";
-
-		ResultSet testResultSet = stmt.executeQuery(sqlTest);
-
-		if (testResultSet.next()) {
-			updateData(conn, item, item.getId());
-		} else {
-			insertData(conn, item);
-		}
-=======
 	
 	public void addOrUpdateData(Connection conn, Item item) throws SQLException{
 		// -TODO change to the CASE WHEN sql statement to get rid of thread conflicts.
@@ -202,12 +162,5 @@ public class DatabaseInteractions {
 		Statement stmt = conn.createStatement();
 		System.out.println(stmt.executeUpdate(sqlTest));
 		
-		
-//		if(testResultSet.next()){
-//			updateData(conn, item, item.getId());
-//		}else{
-//			insertData(conn, item);
-//		}
->>>>>>> Scan-Cancel-Testing
 	}
 }
