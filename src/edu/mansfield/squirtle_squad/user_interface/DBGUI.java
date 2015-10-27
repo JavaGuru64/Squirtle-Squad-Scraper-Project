@@ -62,29 +62,29 @@ public class DBGUI {
 		
 		frmDataviewgui = new JFrame();
 		frmDataviewgui.setTitle("DataViewGUI");
-		frmDataviewgui.setBounds(100, 100, 600, 500);
+		frmDataviewgui.setBounds(100, 100, 709, 610);
 		frmDataviewgui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmDataviewgui.getContentPane().setLayout(null);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		scrollPane_1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
 		scrollPane_1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane_1.setBounds(10, 11, 299, 440);
+		scrollPane_1.setBounds(10, 11, 445, 550);
 		frmDataviewgui.getContentPane().add(scrollPane_1);
 		
 		final JTextPane textPane = new JTextPane();
 		scrollPane_1.setViewportView(textPane);
 		
 		JLabel lblSearch = new JLabel("Search:");
-		lblSearch.setBounds(319, 11, 46, 14);
+		lblSearch.setBounds(465, 64, 46, 14);
 		frmDataviewgui.getContentPane().add(lblSearch);
 		
 		JLabel lblNewLabel = new JLabel("Sort By:");
-		lblNewLabel.setBounds(319, 39, 46, 14);
+		lblNewLabel.setBounds(465, 120, 46, 14);
 		frmDataviewgui.getContentPane().add(lblNewLabel);
 		
 		textField = new JTextField();
-		textField.setBounds(375, 11, 199, 20);
+		textField.setBounds(465, 89, 199, 20);
 		frmDataviewgui.getContentPane().add(textField);
 		textField.setColumns(10);
 		
@@ -96,11 +96,11 @@ public class DBGUI {
 				frmDataviewgui.setVisible(false);
 			}
 		});
-		btnCancel.setBounds(485, 428, 89, 23);
+		btnCancel.setBounds(594, 538, 89, 23);
 		frmDataviewgui.getContentPane().add(btnCancel);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(315, 60, 109, 101);
+		panel.setBounds(465, 143, 109, 101);
 		frmDataviewgui.getContentPane().add(panel);
 		panel.setLayout(null);
 		
@@ -125,7 +125,7 @@ public class DBGUI {
 		panel.add(itemNameRB);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBounds(426, 60, 109, 101);
+		panel_1.setBounds(574, 143, 109, 101);
 		frmDataviewgui.getContentPane().add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -200,11 +200,11 @@ public class DBGUI {
 				
 			}
 		});
-		btnSearch.setBounds(485, 343, 89, 23);
+		btnSearch.setBounds(594, 504, 89, 23);
 		frmDataviewgui.getContentPane().add(btnSearch);
 		
 		JLabel lblNewLabel_1 = new JLabel("Item Type:");
-		lblNewLabel_1.setBounds(431, 39, 89, 14);
+		lblNewLabel_1.setBounds(574, 120, 89, 14);
 		frmDataviewgui.getContentPane().add(lblNewLabel_1);
 	}
 }
