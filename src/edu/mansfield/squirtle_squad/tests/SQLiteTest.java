@@ -21,19 +21,19 @@ public class SQLiteTest {
 		DI.insertData(conn, item2);
 		DI.insertData(conn, item3);
 		Item[] itemSet = DI.getData(conn);
-		for(int i = 0; i < itemSet.length; i++){
+		for (int i = 0; i < itemSet.length; i++) {
 			System.out.println(itemSet[i].toString() + "\n");
 		}
 		DI.deleteData(conn, 2914);
 		itemSet = DI.getData(conn);
 		System.out.println("After Delete:\n\n");
-		for(int i = 0; i < itemSet.length; i++){
+		for (int i = 0; i < itemSet.length; i++) {
 			System.out.println(itemSet[i].toString() + "\n");
 		}
 		DI.updateData(conn, item4, 291204);
 		itemSet = DI.getData(conn);
 		System.out.println("After Update:\n\n");
-		for(int i = 0; i < itemSet.length; i++){
+		for (int i = 0; i < itemSet.length; i++) {
 			System.out.println(itemSet[i].toString() + "\n");
 		}
 

@@ -1,4 +1,5 @@
 package edu.mansfield.squirtle_squad.user_interface;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,13 +17,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+public class StartGUI implements StartGUIDelegate {
 
-public class StartGUI implements StartGUIDelegate{
-
-	private File timeStamp = new File("Resources/TimeStamp");
+	private File timeStamp = new File("resources/data/TimeStamp");
 	private JFrame frmScraperBot;
 	private JLabel lblTimeSinceLast;
-	
+
 	ScanningGUI scanGUI;
 
 	/**
@@ -58,18 +58,18 @@ public class StartGUI implements StartGUIDelegate{
 		frmScraperBot.setBounds(100, 100, 450, 295);
 		frmScraperBot.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmScraperBot.getContentPane().setLayout(null);
-		
+
 		JButton btnSubmit = new JButton("Scan");
 		btnSubmit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmScraperBot.setVisible(false);
-				//scanGUI = new ScanningGUI();
+				// scanGUI = new ScanningGUI();
 				new ScanningGUI(startGUIReference);
 			}
 		});
 		btnSubmit.setBounds(108, 202, 65, 23);
 		frmScraperBot.getContentPane().add(btnSubmit);
-		
+
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -78,11 +78,12 @@ public class StartGUI implements StartGUIDelegate{
 		});
 		btnCancel.setBounds(282, 202, 89, 23);
 		frmScraperBot.getContentPane().add(btnCancel);
-		
-		JLabel lblWelcomeToThe = new JLabel("Welcome to the site scraper bot, for all your scraping needs!");
+
+		JLabel lblWelcomeToThe = new JLabel(
+				"Welcome to the site scraper bot, for all your scraping needs!");
 		lblWelcomeToThe.setBounds(10, 11, 400, 14);
 		frmScraperBot.getContentPane().add(lblWelcomeToThe);
-		
+
 		JButton btnHelp = new JButton("Help");
 		btnHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -91,11 +92,11 @@ public class StartGUI implements StartGUIDelegate{
 		});
 		btnHelp.setBounds(21, 36, 89, 23);
 		frmScraperBot.getContentPane().add(btnHelp);
-		
+
 		lblTimeSinceLast = new JLabel(getLastTimeStamp());
 		lblTimeSinceLast.setBounds(10, 122, 361, 14);
 		frmScraperBot.getContentPane().add(lblTimeSinceLast);
-		
+
 		JButton btnViewdb = new JButton("ViewDB");
 		btnViewdb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -105,19 +106,19 @@ public class StartGUI implements StartGUIDelegate{
 		});
 		btnViewdb.setBounds(183, 202, 89, 23);
 		frmScraperBot.getContentPane().add(btnViewdb);
-		
+
 		JMenuBar menuBar = new JMenuBar();
 		frmScraperBot.setJMenuBar(menuBar);
-		
+
 		JMenu mnFile = new JMenu("File");
 		menuBar.add(mnFile);
-		
+
 		JMenuItem mntmHelp = new JMenuItem("Help");
 		mnFile.add(mntmHelp);
-		
+
 		JMenuItem mntmScan = new JMenuItem("Scan");
 		mnFile.add(mntmScan);
-		
+
 		JMenuItem mntmQuit = new JMenuItem("Quit");
 		mnFile.add(mntmQuit);
 	}
@@ -132,23 +133,23 @@ public class StartGUI implements StartGUIDelegate{
 		lblTimeSinceLast.setText(getLastTimeStamp());
 		frmScraperBot.setVisible(true);
 	}
-	
-	private String getLastTimeStamp(){
+
+	private String getLastTimeStamp() {
 		String timeStampText = "Last scan on: ";
 		try {
 			Scanner sc = new Scanner(timeStamp);
-			while(sc.hasNext()){
+			while (sc.hasNext()) {
 				timeStampText += sc.nextLine();
 			}
 			sc.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		if(timeStampText.equals("Last scan on: ")){
+
+		if (timeStampText.equals("Last scan on: ")) {
 			timeStampText += "NEVER!!!";
 		}
-		
+
 		return timeStampText;
 	}
 }

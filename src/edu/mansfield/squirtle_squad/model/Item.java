@@ -13,16 +13,17 @@ public class Item {
 	double price;
 	long bidTime;
 	boolean isAuction;
-	
-	public Item(){
+
+	public Item() {
 		id = 0;
 		title = "";
 		price = 0;
 		bidTime = 0;
 		isAuction = false;
 	}
-	
-	public Item(long id, String title, double price, long bidTime, boolean isAuction) {
+
+	public Item(long id, String title, double price, long bidTime,
+			boolean isAuction) {
 		this.id = id;
 		this.title = title;
 		this.price = price;

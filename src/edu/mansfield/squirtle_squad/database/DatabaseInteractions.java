@@ -13,7 +13,8 @@ public class DatabaseInteractions {
 		Connection conn = null;
 		try {
 			Class.forName("org.sqlite.JDBC");
-			conn = DriverManager.getConnection("jdbc:sqlite:Resources/Scraper.db");
+			conn = DriverManager
+					.getConnection("jdbc:sqlite:resources/data/Scraper.db");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -21,15 +22,18 @@ public class DatabaseInteractions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return conn;
 
 	}
 
 	public void makeTable(Connection conn) throws SQLException {
 		Statement stmt = null;
-		String sql = "CREATE TABLE EbayData\n" + "(id long NOT NULL PRIMARY KEY," + "title varchar(255) NOT NULL,"
-				+ "price DOUBLE PRECISION NOT NULL," + "bidTime long NOT NULL," + "isAuction boolean);";
+		String sql = "CREATE TABLE EbayData\n"
+				+ "(id long NOT NULL PRIMARY KEY,"
+				+ "title varchar(255) NOT NULL,"
+				+ "price DOUBLE PRECISION NOT NULL," + "bidTime long NOT NULL,"
+				+ "isAuction boolean);";
 		stmt = conn.createStatement();
 		stmt.executeUpdate(sql);
 		stmt.close();
@@ -55,9 +59,17 @@ public class DatabaseInteractions {
 		if (item.isAuction()) {
 			boolValue = 1;
 		}
-		String sql = "INSERT INTO EbayData (id, title, price, bidTime, isAuction)" + " VALUES ("
-				+ Long.toString(item.getId()) + ", \"" + newTitle + "\", " + Double.toString(item.getPrice()) + ", "
-				+ Long.toString(item.getBidTime()) + ", " + Integer.toString(boolValue) + ");";
+		String sql = "INSERT INTO EbayData (id, title, price, bidTime, isAuction)"
+				+ " VALUES ("
+				+ Long.toString(item.getId())
+				+ ", \""
+				+ newTitle
+				+ "\", "
+				+ Double.toString(item.getPrice())
+				+ ", "
+				+ Long.toString(item.getBidTime())
+				+ ", "
+				+ Integer.toString(boolValue) + ");";
 		stmt.execute(sql);
 		stmt.close();
 	}
@@ -102,55 +114,59 @@ public class DatabaseInteractions {
 		stmt.close();
 	}
 
-	public void updateData(Connection conn, Item item, long replaceID) throws SQLException {
+	public void updateData(Connection conn, Item item, long replaceID)
+			throws SQLException {
 		deleteData(conn, replaceID);
 		insertData(conn, item);
 
 	}
 
-	public String searchSelect(Connection conn, String searchTerm, String searchOrder, String searchType)
-			throws SQLException {
+	public String searchSelect(Connection conn, String searchTerm,
+			String searchOrder, String searchType) throws SQLException {
 		Statement stmt = conn.createStatement();
-		String sql = "SELECT * FROM EbayData ORDER BY id LIMIT 10000;";// WHERE title LIKE " + searchTerm + " AND isAuction ORDER BY " + searchOrder;
+		String sql = "SELECT * FROM EbayData ORDER BY id LIMIT 10000;";
+		// WHERE title LIKE " + searchTerm + " AND isAuction ORDER BY " + searchOrder;
+		
 		ResultSet rs = stmt.executeQuery(sql);
 		String returnString = "";
 
 		if (rs != null) {
 			while (rs.next()) {
-				returnString += Long.toString(rs.getLong("id")) + ", " +
-						rs.getString("title") + Double.toString(rs.getDouble("price")) +", " +
-						Long.toString(rs.getLong("bidTime")) +", " +
-						Boolean.toString(rs.getBoolean("isAuction")) + "\n";
+				returnString += Long.toString(rs.getLong("id")) + ", "
+						+ rs.getString("title")
+						+ Double.toString(rs.getDouble("price")) + ", "
+						+ Long.toString(rs.getLong("bidTime")) + ", "
+						+ Boolean.toString(rs.getBoolean("isAuction")) + "\n";
 
 			}
 		}
 
 		return returnString;
 	}
-	
-	public void addOrUpdateData(Connection conn, Item item) throws SQLException{
+
+	public void addOrUpdateData(Connection conn, Item item) throws SQLException {
 		String newTitle = item.getTitle();
 		newTitle = newTitle.replaceAll("\"", "");
-		
+
 		int boolValue = 0;
 		if (item.isAuction()) {
 			boolValue = 1;
 		}
-		
+
 		String sqlTest = "INSERT OR REPLACE INTO EbayData (id, title, price, bidTime, isAuction)"
-		 + " VALUES ("
-		 + Long.toString(item.getId())
-		 + ", \""
-		 + newTitle
-		 + "\", "
-		 + Double.toString(item.getPrice())
-		 + ", "
-		 + Long.toString(item.getBidTime())
-		 + ", "
-		 + Integer.toString(boolValue) + ");";
-		
+				+ " VALUES ("
+				+ Long.toString(item.getId())
+				+ ", \""
+				+ newTitle
+				+ "\", "
+				+ Double.toString(item.getPrice())
+				+ ", "
+				+ Long.toString(item.getBidTime())
+				+ ", "
+				+ Integer.toString(boolValue) + ");";
+
 		Statement stmt = conn.createStatement();
 		stmt.executeUpdate(sqlTest);
-		
+
 	}
 }

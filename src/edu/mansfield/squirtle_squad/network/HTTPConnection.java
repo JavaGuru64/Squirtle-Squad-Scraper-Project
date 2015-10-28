@@ -10,52 +10,55 @@ import java.net.URLConnection;
 public class HTTPConnection {
 
 	/*
-	 *	Right now this constructor is useless we may want to add functionality to
-	 *  our networking later, but for now all we need is a static method. 
-	 *
+	 * Right now this constructor is useless we may want to add functionality to
+	 * our networking later, but for now all we need is a static method.
 	 */
 	@Deprecated
-	HTTPConnection(){
-		
+	HTTPConnection() {
+
 	}
-	
+
 	/*
-	 *  Decided it would be better to throw the exception then deal with it here,
-	 *  because depending on the context of how or when we are using it we may 
-	 *  want to handle an exception differently.
-	 *  
+	 * Decided it would be better to throw the exception then deal with it here,
+	 * because depending on the context of how or when we are using it we may
+	 * want to handle an exception differently.
 	 */
 	@Deprecated
 	public static String htmlFromUrl(String url) throws IOException {
-		
+
 		URLConnection htmlStream = new URL(url).openConnection();
-		BufferedReader inputStream = new BufferedReader(new InputStreamReader(htmlStream.getInputStream()));
-		
+		BufferedReader inputStream = new BufferedReader(new InputStreamReader(
+				htmlStream.getInputStream()));
+
 		StringBuilder webpage = new StringBuilder("");
-		
+
 		String temporaryVariableThatWouldBePerfectForAnEmojii;
-		
-		while((temporaryVariableThatWouldBePerfectForAnEmojii = inputStream.readLine()) != null){
+
+		while ((temporaryVariableThatWouldBePerfectForAnEmojii = inputStream
+				.readLine()) != null) {
 			webpage.append(temporaryVariableThatWouldBePerfectForAnEmojii);
 		}
-		
+
 		return webpage.toString();
 	}
-	
+
 	@Deprecated
 	public static String htmlWithNewlinesFromUrl(String url) throws IOException {
-		
+
 		URLConnection htmlStream = new URL(url).openConnection();
-		BufferedReader inputStream = new BufferedReader(new InputStreamReader(htmlStream.getInputStream()));
-		
+		BufferedReader inputStream = new BufferedReader(new InputStreamReader(
+				htmlStream.getInputStream()));
+
 		StringBuilder webpage = new StringBuilder("");
-		
+
 		String temporaryVariableThatWouldBePerfectForAnEmojii;
-		
-		while((temporaryVariableThatWouldBePerfectForAnEmojii = inputStream.readLine()) != null){
-			webpage.append(temporaryVariableThatWouldBePerfectForAnEmojii + "\n");
+
+		while ((temporaryVariableThatWouldBePerfectForAnEmojii = inputStream
+				.readLine()) != null) {
+			webpage.append(temporaryVariableThatWouldBePerfectForAnEmojii
+					+ "\n");
 		}
-		
+
 		return webpage.toString();
 	}
 }

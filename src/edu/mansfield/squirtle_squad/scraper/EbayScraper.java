@@ -21,69 +21,75 @@ import edu.mansfield.squirtle_squad.utilities.DataFormatter;
  *
  */
 
-public class EbayScraper extends Scraper{
-	
+public class EbayScraper extends Scraper {
+
 	// Document doc; -JSoup Document loaded with url.
 	// WebScannerDelegate delegate; -A delegate to talk with the webscanner.
-	
-	public EbayScraper(WebScannerDelegate delegate, String url) throws IOException{
+
+	public EbayScraper(WebScannerDelegate delegate, String url)
+			throws IOException {
 		super(delegate, url);
 	}
-	
-	public int getItemCount(){
-		try{
-			return Integer.parseInt(doc.select("span.listingscnt").text().replaceAll("\\D", ""));
-		}
-		catch(Exception e){
+
+	public int getItemCount() {
+		try {
+			return Integer.parseInt(doc.select("span.listingscnt").text()
+					.replaceAll("\\D", ""));
+		} catch (Exception e) {
 			return 0;
 		}
 	}
-	
-	public ArrayList<Item> getItemsListed(){
+
+	public ArrayList<Item> getItemsListed() {
 		ArrayList<Item> itemsOnPage = new ArrayList<Item>(200);
 		Element e;
 		Elements es;
-		
-		try{
+
+		try {
 			e = doc.select("ul#ListViewInner").get(0);
 			es = e.select("li[listingid]");
-		}
-		catch(Exception exception){
+		} catch (Exception exception) {
 			return itemsOnPage;
 		}
-		
-		//int i=0;
-		
-		
-		for(Element el: es){
-			//System.out.println(++i);
+
+		// int i=0;
+
+		for (Element el : es) {
+			// System.out.println(++i);
 			long id = Long.parseLong(el.attr("listingid"));
 			String title = el.select("a.vip").get(0).text();
-			
+
 			double price = 0;
-			try{
-				price = DataFormatter.doubleFromPriceString(el.select("li.lvprice").get(0).select("span.bold").get(0).text());
-			}catch(IndexOutOfBoundsException exception){}
-			
+			try {
+				String priceString = el.select("li.lvprice > span.bold").get(0).text();
+				//System.out.println(title + ": " + priceString);
+				price = DataFormatter.doubleFromPriceString(priceString);
+				//System.out.println(title + ": " + price);
+			} catch (IndexOutOfBoundsException exception) {
+			}
+
 			long time = 0;
 			boolean isAuction = false;
-			try{
-				Element elm = el.select("span.tme").get(0).select("span[timems]").get(0);
+			try {
+				Element elm = el.select("span.tme").get(0)
+						.select("span[timems]").get(0);
 				time = Long.parseLong(elm.attr("timems"));
 				isAuction = true;
+			} catch (IndexOutOfBoundsException exception) {
 			}
-			catch(IndexOutOfBoundsException exception){}
-			
+
 			itemsOnPage.add(new Item(id, title, price, time, isAuction));
 		}
-		
+
 		return itemsOnPage;
 	}
-	
-	public static void main(String[] args) throws IOException{
-		EbayScraper scraper = new EbayScraper(null, "http://www.ebay.com/sch/Antiquities-/37903/i.html?_mPrRngCbx=1&_udlo=0&_udhi=16&_pgn=11&_skc=2000&rt=nc");
-		int i=0;
-		for(Item item: scraper.getItemsListed()){
+
+	public static void main(String[] args) throws IOException {
+		EbayScraper scraper = new EbayScraper(
+				null,
+				"http://www.ebay.com/sch/Antiquities-/37903/i.html?_mPrRngCbx=1&_udlo=0&_udhi=16&_pgn=11&_skc=2000&rt=nc");
+		int i = 0;
+		for (Item item : scraper.getItemsListed()) {
 			System.out.println(++i);
 			System.out.println(item.toString());
 		}

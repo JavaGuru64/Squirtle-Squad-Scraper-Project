@@ -1,4 +1,5 @@
 package edu.mansfield.squirtle_squad.user_interface;
+
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -11,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
-
 
 public class HelpGUI {
 
@@ -44,11 +44,11 @@ public class HelpGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		File readMe = new File("README.md");
+		File readMe = new File("resources/help/README.md");
 		String readMeText = "";
 		try {
 			Scanner sc = new Scanner(readMe);
-			while(sc.hasNext()){
+			while (sc.hasNext()) {
 				readMeText += sc.nextLine() + "\n";
 			}
 			sc.close();
@@ -58,17 +58,17 @@ public class HelpGUI {
 		frmHelpMe = new JFrame();
 		frmHelpMe.setTitle("Help Me!");
 		frmHelpMe.setBounds(100, 100, 450, 340);
-		//frmHelpMe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// frmHelpMe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmHelpMe.getContentPane().setLayout(null);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 11, 414, 240);
 		frmHelpMe.getContentPane().add(scrollPane);
-		
+
 		JTextPane textPane = new JTextPane();
 		scrollPane.setViewportView(textPane);
 		textPane.setText(readMeText);
-		
+
 		JButton btnOk = new JButton("Ok");
 		btnOk.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
