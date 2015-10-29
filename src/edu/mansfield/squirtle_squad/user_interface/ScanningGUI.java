@@ -11,6 +11,7 @@ import edu.mansfield.squirtle_squad.controller.EbayScanController;
 import edu.mansfield.squirtle_squad.delegates.ScanDelegate;
 import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
 import edu.mansfield.squirtle_squad.delegates.WebScannerDelegate;
+import edu.mansfield.squirtle_squad.utilities.FileHandler;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -191,7 +192,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate {
 
 	private void setTimeStampDate() {
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("rsrc/TimeStamp"), "utf-8"))) {
+				new FileOutputStream(FileHandler.getTimeStampFilePath()), "utf-8"))) {
 			writer.flush();
 			writer.write(Date.from(Instant.now()).toString());
 		} catch (Exception e) {e.printStackTrace();}

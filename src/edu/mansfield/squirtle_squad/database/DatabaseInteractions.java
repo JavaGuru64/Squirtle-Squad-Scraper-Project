@@ -7,14 +7,16 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import edu.mansfield.squirtle_squad.model.Item;
+import edu.mansfield.squirtle_squad.utilities.FileHandler;
 
 public class DatabaseInteractions {
 	public Connection dbConnect() {
 		Connection conn = null;
 		try {
+			//getClass().getClassLoader().getResource("Scraper.db");
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager
-					.getConnection("jdbc:sqlite:rsrc/Scraper.db");
+					.getConnection("jdbc:sqlite:" + FileHandler.getScraperFilePath());
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -114,6 +116,14 @@ public class DatabaseInteractions {
 		stmt.close();
 	}
 
+	public void deleteExpiredAuctions(Connection conn) throws SQLException {
+		Statement stmt = null;
+		String sql = "DELETE FROM EbayData WHERE bidTime < " + System.currentTimeMillis() + " AND bidTime != 0;";
+		stmt = conn.createStatement();
+		stmt.executeUpdate(sql);
+		stmt.close();
+	}
+	
 	public void updateData(Connection conn, Item item, long replaceID)
 			throws SQLException {
 		deleteData(conn, replaceID);
@@ -140,7 +150,7 @@ public class DatabaseInteractions {
 
 			}
 		}
-
+		stmt.close();
 		return returnString;
 	}
 
@@ -167,6 +177,8 @@ public class DatabaseInteractions {
 
 		Statement stmt = conn.createStatement();
 		stmt.executeUpdate(sqlTest);
+		stmt.close();
 
 	}
+	
 }

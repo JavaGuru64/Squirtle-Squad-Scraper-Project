@@ -28,7 +28,7 @@ public class EbayScanController extends ScanController implements
 		WebScannerDelegate {
 
 	final int ITEMS_PER_PAGE = 10000;
-	final double ACTUAL_PERCENTAGE_TO_DOWNLOAD_ALMOST = .01;
+	final double ACTUAL_PERCENTAGE_TO_DOWNLOAD_ALMOST = .5;
 
 	private ArrayList<String> categories;
 	private int scanLength;
@@ -114,7 +114,8 @@ public class EbayScanController extends ScanController implements
 			percentIncrementPerCategory = 100 / (ACTUAL_PERCENTAGE_TO_DOWNLOAD_ALMOST * scanLength);
 			DatabaseInteractions dbInteract = new DatabaseInteractions();
 			dbConnect = dbInteract.dbConnect();
-		} catch (IOException e) {
+			dbInteract.deleteExpiredAuctions(dbConnect);
+		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 			endScan();
 			showAlertErrorBox("Error Code: " + e.getClass(),
