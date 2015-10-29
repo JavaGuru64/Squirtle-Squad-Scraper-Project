@@ -44,7 +44,7 @@ public class HelpGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		File readMe = new File("resources/help/README.md");
+		File readMe = new File("rsrc/README.md");
 		String readMeText = "";
 		try {
 			Scanner sc = new Scanner(readMe);

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry including="README.md|Scraper.db|TimeStamp" kind="src" path="rsrc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="Libraries/jsoup-1.8.3.jar"/>
 	<classpathentry kind="lib" path="Libraries/sqlite-jdbc-3.8.11.1.jar"/>
 	<classpathentry kind="lib" path="Libraries/sqlite.jar"/>
-	<classpathentry kind="lib" path="resources"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

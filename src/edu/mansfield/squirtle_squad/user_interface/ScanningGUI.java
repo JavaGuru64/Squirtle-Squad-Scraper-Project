@@ -191,7 +191,7 @@ public class ScanningGUI extends SubGUI implements ScanDelegate {
 
 	private void setTimeStampDate() {
 		try (Writer writer = new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream("resources/data/TimeStamp"), "utf-8"))) {
+				new FileOutputStream("rsrc/TimeStamp"), "utf-8"))) {
 			writer.flush();
 			writer.write(Date.from(Instant.now()).toString());
 		} catch (Exception e) {e.printStackTrace();}

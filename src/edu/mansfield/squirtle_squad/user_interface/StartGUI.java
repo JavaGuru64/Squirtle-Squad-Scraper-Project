@@ -19,7 +19,7 @@ import java.util.Scanner;
 
 public class StartGUI implements StartGUIDelegate {
 
-	private File timeStamp = new File("resources/data/TimeStamp");
+	private File timeStamp = new File("rsrc/TimeStamp");
 	private JFrame frmScraperBot;
 	private JLabel lblTimeSinceLast;
 

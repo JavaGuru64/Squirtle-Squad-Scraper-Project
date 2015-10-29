@@ -14,7 +14,7 @@ public class DatabaseInteractions {
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager
-					.getConnection("jdbc:sqlite:resources/data/Scraper.db");
+					.getConnection("jdbc:sqlite:rsrc/Scraper.db");
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -22,7 +22,7 @@ public class DatabaseInteractions {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		return conn;
 
 	}
