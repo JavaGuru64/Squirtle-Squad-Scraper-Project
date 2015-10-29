@@ -105,7 +105,12 @@ public class DBGUI extends SubGUI {
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				frmDataviewgui.setVisible(false);
-				startGUI.makeVisable(thisReference);
+				if(startGUI != null){
+					startGUI.makeVisable(thisReference);
+				}
+				else{
+					System.exit(0);
+				}
 			}
 		});
 		btnCancel.setBounds(594, 538, 89, 23);

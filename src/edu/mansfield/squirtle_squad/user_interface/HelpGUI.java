@@ -9,8 +9,7 @@ import javax.swing.JButton;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class HelpGUI {
@@ -44,17 +43,15 @@ public class HelpGUI {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		File readMe = new File("rsrc/README.md");
+		InputStream ipst = getClass().getClassLoader().getResourceAsStream("README.md");
+		Scanner sc = new Scanner(ipst);
+		
 		String readMeText = "";
-		try {
-			Scanner sc = new Scanner(readMe);
-			while (sc.hasNext()) {
-				readMeText += sc.nextLine() + "\n";
-			}
-			sc.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		while (sc.hasNext()) {
+			readMeText += sc.nextLine() + "\n";
 		}
+		sc.close();
+		
 		frmHelpMe = new JFrame();
 		frmHelpMe.setTitle("Help Me!");
 		frmHelpMe.setBounds(100, 100, 450, 340);

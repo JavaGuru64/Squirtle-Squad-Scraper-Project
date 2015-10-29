@@ -10,6 +10,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
 import edu.mansfield.squirtle_squad.delegates.StartGUIDelegate;
+import edu.mansfield.squirtle_squad.utilities.FileHandler;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -19,7 +20,8 @@ import java.util.Scanner;
 
 public class StartGUI implements StartGUIDelegate {
 
-	private File timeStamp = new File("rsrc/TimeStamp");
+	
+	private File timeStamp = new File(FileHandler.getTimeStampFilePath());
 	private JFrame frmScraperBot;
 	private JLabel lblTimeSinceLast;
 
@@ -45,6 +47,7 @@ public class StartGUI implements StartGUIDelegate {
 	 * Create the application.
 	 */
 	public StartGUI() {
+		FileHandler.setUpAppDirectory();
 		initialize();
 	}
 
@@ -147,7 +150,7 @@ public class StartGUI implements StartGUIDelegate {
 		}
 
 		if (timeStampText.equals("Last scan on: ")) {
-			timeStampText += "NEVER!!!";
+			timeStampText += "No Scans Run!";
 		}
 
 		return timeStampText;
