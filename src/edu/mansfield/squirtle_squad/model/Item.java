@@ -8,7 +8,7 @@ package edu.mansfield.squirtle_squad.model;
 
 public class Item {
 
-	long id;
+
 	String title;
 	double price;
 	long bidTime;
